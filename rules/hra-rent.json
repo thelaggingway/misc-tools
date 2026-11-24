@@ -1,0 +1,50 @@
+{
+  "name": "hra-rent",
+  "description": "Thresholds for a rent receipt used to claim house rent allowance: when the landlord's PAN must be given, and when a cash receipt needs a revenue stamp. Both are amounts set by central law, not rates that change every year.",
+  "coverage": { "from": "2026-04-01", "to": "2027-03-31" },
+  "checked_on": "2026-11-24",
+  "sources": [
+    {
+      "id": "form124-faq",
+      "title": "Income Tax Department: Form No. 124 (earlier Form No. 12BB) frequently asked questions",
+      "url": "https://www.incometaxindia.gov.in/documents/d/guest/form-124-faqs",
+      "notes": "Maps Form 12BB / rule 26C of the Income-tax Rules, 1962 to Form 124 / rule 205 of the Income-tax Rules, 2026 and section 192 to section 392(5)(b) of the Income-tax Act, 2025. Question 5: the landlord's PAN must be furnished if the annual rent exceeds ₹1,00,000; Aadhaar is not mandatory unless the employer asks."
+    },
+    {
+      "id": "form12bb",
+      "title": "Income Tax Department: Form No. 12BB (see rule 26C), statement of claims by an employee for deduction of tax under section 192",
+      "url": "https://www.incometaxindia.gov.in/documents/d/guest/itrform12bb-pdf",
+      "notes": "House rent allowance entry: rent paid to the landlord, and the landlord's name, address and PAN. Note to the entry: PAN shall be furnished if the aggregate rent paid during the previous year exceeds one lakh rupees."
+    },
+    {
+      "id": "stamp-act",
+      "title": "The Indian Stamp Act, 1899 (India Code)",
+      "url": "https://www.indiacode.nic.in/bitstream/123456789/15510/5/A1899-2%20.pdf",
+      "notes": "Section 30: a person receiving money exceeding twenty rupees must, on demand, give a duly stamped receipt. Schedule I, Article 53: a receipt for money or property exceeding ₹5,000 is chargeable, and exempts a receipt endorsed on a duly stamped instrument or on a cheque or bill of exchange payable on demand."
+    },
+    {
+      "id": "stamp-schedule",
+      "title": "Income Tax Department: Schedule I of the Indian Stamp Act, 1899, Article 53 (RECEIPT)",
+      "url": "https://www.incometaxindia.gov.in/w/schedule-i-3",
+      "notes": "The rate column for Article 53 prints \"One rupee\" for a receipt above ₹5,000, i.e. a ₹1 revenue stamp."
+    }
+  ],
+  "entries": [
+    {
+      "kind": "landlord_pan",
+      "threshold": 100000,
+      "basis": "aggregate rent paid during the previous year",
+      "form": "Form 124 (earlier Form 12BB)",
+      "source": "form124-faq",
+      "notes": "Applies to a claim of HRA exemption made to the employer. Above the threshold, leave the landlord's PAN on the receipt and in the claim; below it, the receipt can be issued without one."
+    },
+    {
+      "kind": "revenue_stamp",
+      "threshold": 5000,
+      "stamp_value": 1,
+      "basis": "a receipt for money, where the payment is in cash",
+      "source": "stamp-act",
+      "notes": "A receipt for more than ₹5,000 is chargeable under Article 53 and the duty printed there is one rupee. A receipt for rent paid by cheque or bill of exchange payable on demand is exempt, so only cash receipts need the stamp in practice."
+    }
+  ]
+}

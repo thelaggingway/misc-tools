@@ -1,0 +1,148 @@
+{
+  "name": "professional-tax",
+  "description": "State professional tax (tax on professions, trades, callings and employments) on a monthly salary, by state. Slabs are as each state levies them: monthly for most states, annual for Madhya Pradesh, half-yearly for Tamil Nadu. A slab's 'upto' is inclusive and 'below' is exclusive; 'amount' is the deduction for the payslip month, 'month_overrides' replaces it in a given month (2 = February), and 'deduct_in_months' limits deduction to those months of the year.",
+  "coverage": { "from": "2026-04-01", "to": "2027-03-31" },
+  "checked_on": "2026-11-24",
+  "sources": [
+    {
+      "id": "maha-act",
+      "title": "The Maharashtra State Tax on Professions, Trades, Callings and Employments Act, 1975 (text as published by the Maharashtra GST Department)",
+      "url": "https://www.mahagst.gov.in/public/uploads/mvatservices/1760346808Maharashtra%20Profession%20Tax%20Act%201975.pdf",
+      "notes": "Schedule I (see section 3), entry 1, as substituted by Maharashtra Act 19 of 2023: men pay nil up to ₹7,500, ₹175 a month from ₹7,501 to ₹10,000, and ₹2,500 a year above ₹10,000 (₹200 a month, ₹300 in February); women pay nil up to ₹25,000 and the same ₹2,500 a year above it."
+    },
+    {
+      "id": "ka-faq",
+      "title": "Commercial Taxes Department, Government of Karnataka: Profession Tax FAQ",
+      "url": "https://ptax.karnataka.gov.in/ptemployer/FAQ",
+      "notes": "Salaried individuals with monthly gross income below ₹25,000 are exempt with effect from 01-04-2023; tax applies at ₹25,000 and above. The department's portal notice states February PT is ₹300 per employee instead of ₹200, per Notification No. DPAL 08 SHASANA 2025, Bengaluru, dated 15-04-2025."
+    },
+    {
+      "id": "tn-gcc",
+      "title": "Greater Chennai Corporation press release PR No. 356 dated 05-08-2026: deduction and remittance of profession tax by employers",
+      "url": "https://www.chennaicorporation.gov.in/news/news_20260805_2.pdf",
+      "notes": "Half-yearly slabs under section 117-C of the Tamil Nadu Urban Local Bodies Act, 1998 and rule 277 of the Tamil Nadu Urban Local Bodies Rules, 2023, as revised from the second half-year of 2024-25: nil up to ₹21,000, then ₹180 / ₹425 / ₹930 / ₹1,025 / ₹1,250. Deducted from the August and January salary and remitted by 30 September / 31 January."
+    },
+    {
+      "id": "tg-schedule",
+      "title": "Commercial Taxes Department, Government of Telangana: PT Schedule (First Schedule, Telangana Tax on Professions, Trades, Callings and Employments Act, 1987, as amended up to date)",
+      "url": "https://www.tgct.gov.in/tgportal/AllActs/APPT/APPTSchedule.aspx",
+      "notes": "Salary and wage earners: nil up to ₹15,000 a month, ₹150 a month from ₹15,001 to ₹20,000, ₹200 a month above ₹20,000."
+    },
+    {
+      "id": "gj-rates",
+      "title": "Gujarat Commercial Tax Department: Rate of Profession Tax under the Gujarat State Tax on Professions, Trades, Callings and Employments Act, 1976",
+      "url": "https://commercialtax.gujarat.gov.in/vatwebsite/download/schedule/Rate_of_Profession_Tax.pdf",
+      "notes": "Entry 1, salary and wage earners: nil up to ₹12,000 a month and ₹200 a month above ₹12,000, effective 01-04-2022 (the same for government and non-government employees)."
+    },
+    {
+      "id": "mp-rates",
+      "title": "Madhya Pradesh Commercial Tax Department: Professional Tax schedule (registration checklist and rates)",
+      "url": "https://mptax.mp.gov.in/mpvatweb/download/home/MPCTD_Registration_Checklist&_Rates.pdf",
+      "notes": "Persons in employment, on annual salary or wages: nil up to ₹2,25,000; ₹1,500 a year (₹125 a month) above ₹2,25,000 up to ₹3,00,000; ₹2,000 a year (₹166 a month, ₹174 in the twelfth month) up to ₹4,00,000; ₹2,500 a year (₹208 a month, ₹212 in the twelfth month) above ₹4,00,000."
+    },
+    {
+      "id": "wb-proposal",
+      "title": "West Bengal Finance Department notification No. 1407-F.T. dated 18-08-2026 (Kolkata Gazette), proposed new Schedule under section 3(2A)",
+      "url": "https://comtax.wb.gov.in/pdf/SAR-470_Finance%20Dept%28Rev%29_1407-FT.pdf",
+      "notes": "Read, but not used: it is published for objections under section 3(3) and does not say when (or whether) it took effect. The schedule in force for 2026-27 could not be confirmed, so West Bengal is left out of the entries below."
+    }
+  ],
+  "entries": [
+    {
+      "state": "Maharashtra",
+      "applies_to": "male",
+      "basis": "monthly",
+      "slabs": [
+        { "upto": 7500, "amount": 0 },
+        { "upto": 10000, "amount": 175 },
+        { "upto": null, "amount": 200, "month_overrides": { "2": 300 } }
+      ],
+      "annual_cap": 2500,
+      "source": "maha-act"
+    },
+    {
+      "state": "Maharashtra",
+      "applies_to": "female",
+      "basis": "monthly",
+      "slabs": [
+        { "upto": 25000, "amount": 0 },
+        { "upto": null, "amount": 200, "month_overrides": { "2": 300 } }
+      ],
+      "annual_cap": 2500,
+      "source": "maha-act"
+    },
+    {
+      "state": "Karnataka",
+      "basis": "monthly",
+      "slabs": [
+        { "below": 25000, "amount": 0 },
+        { "upto": null, "amount": 200, "month_overrides": { "2": 300 } }
+      ],
+      "annual_cap": 2500,
+      "source": "ka-faq"
+    },
+    {
+      "state": "Tamil Nadu",
+      "basis": "half_yearly",
+      "slabs": [
+        { "upto": 21000, "amount": 0 },
+        { "upto": 30000, "amount": 180 },
+        { "upto": 45000, "amount": 425 },
+        { "upto": 60000, "amount": 930 },
+        { "upto": 75000, "amount": 1025 },
+        { "upto": null, "amount": 1250 }
+      ],
+      "deduct_in_months": [1, 8],
+      "annual_cap": 2500,
+      "source": "tn-gcc",
+      "notes": "Levied by the urban local body, not the state: these are the Greater Chennai Corporation slabs. Another corporation or municipality may differ."
+    },
+    {
+      "state": "Telangana",
+      "basis": "monthly",
+      "slabs": [
+        { "upto": 15000, "amount": 0 },
+        { "upto": 20000, "amount": 150 },
+        { "upto": null, "amount": 200 }
+      ],
+      "annual_cap": 2500,
+      "source": "tg-schedule"
+    },
+    {
+      "state": "Gujarat",
+      "basis": "monthly",
+      "slabs": [
+        { "upto": 12000, "amount": 0 },
+        { "upto": null, "amount": 200 }
+      ],
+      "annual_cap": 2500,
+      "source": "gj-rates"
+    },
+    {
+      "state": "Madhya Pradesh",
+      "basis": "annual",
+      "slabs": [
+        { "upto": 225000, "annual": 0, "amount": 0 },
+        { "upto": 300000, "annual": 1500, "amount": 125 },
+        { "upto": 400000, "annual": 2000, "amount": 166, "last_month_amount": 174 },
+        { "upto": null, "annual": 2500, "amount": 208, "last_month_amount": 212 }
+      ],
+      "last_month": 3,
+      "annual_cap": 2500,
+      "source": "mp-rates",
+      "notes": "Slabs are on annual salary; the monthly figures are the department's own. The twelfth month of the financial year is March."
+    }
+  ],
+  "unverified": [
+    {
+      "state": "West Bengal",
+      "reason": "The only schedule found is a proposed substitution published on 18-08-2026 for objections (source wb-proposal); the schedule in force for 2026-27 could not be confirmed on comtax.wb.gov.in.",
+      "do": "Pass professionalTax as a number, checked against the West Bengal Commercial Taxes Department page, instead of using autoDeductions."
+    },
+    {
+      "state": "Every other state and union territory",
+      "reason": "Not covered by this file.",
+      "do": "Pass professionalTax as a number."
+    }
+  ]
+}

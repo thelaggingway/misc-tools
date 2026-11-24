@@ -1,0 +1,19 @@
+{
+  "slipNo": "PAY/2627/EMP07/08",
+  "issueDate": "2026-11-30",
+  "month": "2026-11",
+  "daysPaid": 30,
+  "lopDays": 0,
+  "basic": 32000,
+  "hra": 12800,
+  "allowances": [
+    { "name": "Conveyance", "amount": 1600 },
+    { "name": "Special allowance", "amount": 5000 }
+  ],
+  "autoDeductions": true,
+  "pfApplicable": true,
+  "esiApplicable": true,
+  "tds": 1500,
+  "notes": "Paid by NEFT to the bank account shown above.",
+  "deductionBasis": []
+}

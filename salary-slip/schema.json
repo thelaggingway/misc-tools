@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Salary slip input",
+  "description": "Every field is optional except the ones the CLI needs to make a wage slip; missing ones fall back to the template's defaults. Files passed to the CLI merge left to right (employer file, employee file, month file).",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "employerName": { "type": "string", "description": "Name of the establishment, as registered" },
+    "employerAddress": { "type": "string", "description": "Establishment address on one line" },
+    "employerRef": { "type": "string", "description": "Registration numbers under the name, e.g. LIN or GSTIN; shown under the address" },
+    "slipNo": { "type": "string", "description": "Wage slip number, e.g. PAY/2627/EMP01/08; never reuse one" },
+    "issueDate": { "type": "string", "pattern": "^$|^\\d{4}-\\d{2}-\\d{2}$", "description": "Date the slip is issued, YYYY-MM-DD; defaults to today" },
+    "month": { "type": "string", "pattern": "^\\d{4}-(0[1-9]|1[0-2])$", "description": "Wage period, as YYYY-MM (a calendar month)" },
+    "employeeName": { "type": "string", "description": "Employee's name" },
+    "employeeGuardian": { "type": "string", "description": "Father's, mother's or spouse's name (Form V asks for it)" },
+    "designation": { "type": "string", "description": "Designation" },
+    "employeeCode": { "type": "string", "description": "Employee code or number" },
+    "department": { "type": "string", "description": "Department, if the employer uses them" },
+    "uan": { "type": "string", "description": "EPFO Universal Account Number, 12 digits" },
+    "esiNumber": { "type": "string", "description": "ESI insurance number, if the employee is covered" },
+    "pan": { "type": "string", "pattern": "^$|^[A-Z]{3}[ABCFGHJLPT][A-Z][0-9]{4}[A-Z]$", "description": "Employee PAN, or empty" },
+    "bankAccount": { "type": "string", "description": "Bank account the wages are paid into" },
+    "ifsc": { "type": "string", "pattern": "^$|^[A-Z]{4}0[A-Z0-9]{6}$", "description": "an 11-character IFSC like ICIC0001190, or empty" },
+    "daysPaid": { "type": ["number", "string"], "pattern": "^\\d+(\\.\\d+)?$", "description": "Days paid in the month; defaults to the days in the month less lopDays" },
+    "lopDays": { "type": ["number", "string"], "pattern": "^\\d+(\\.\\d+)?$", "description": "Days of loss of pay (unpaid leave) in the month, default 0" },
+    "basic": { "type": ["number", "string"], "pattern": "^\\d+(\\.\\d+)?$", "description": "Basic wages for the month" },
+    "da": { "type": ["number", "string"], "pattern": "^\\d+(\\.\\d+)?$", "description": "Dearness allowance" },
+    "hra": { "type": ["number", "string"], "pattern": "^\\d+(\\.\\d+)?$", "description": "House rent allowance" },
+    "overtime": { "type": ["number", "string"], "pattern": "^\\d+(\\.\\d+)?$", "description": "Overtime wages for the month" },
+    "allowances": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "amount"],
+        "properties": {
+          "name": { "type": "string", "description": "Allowance name, e.g. Conveyance, Special allowance" },
+          "amount": { "type": ["number", "string"], "pattern": "^\\d+(\\.\\d+)?$", "description": "Amount for the month" }
+        }
+      },
+      "description": "Other allowances, each with a name and an amount"
+    },
+    "state": { "type": "string", "description": "State where the employee works; decides the professional tax. Maharashtra, Karnataka, Tamil Nadu, Telangana, Gujarat and Madhya Pradesh are in rules/professional-tax.json" },
+    "gender": { "enum": ["male", "female", "other"], "description": "Used only where a state's professional tax differs for men and women (Maharashtra)" },
+    "autoDeductions": { "type": "boolean", "description": "Compute PF, ESI and professional tax from rules/ instead of taking pf, esi and professionalTax as given" },
+    "pfApplicable": { "type": "boolean", "description": "Whether the establishment/employee is covered by EPF; with autoDeductions, false leaves PF out" },
+    "esiApplicable": { "type": "boolean", "description": "Whether the establishment is covered by ESIC; with autoDeductions, false leaves ESI out" },
+    "esiDisability": { "type": "boolean", "description": "Employee is a person with disability, for whom the ESI wage ceiling is higher" },
+    "pf": { "type": ["number", "string"], "pattern": "^\\d+(\\.\\d+)?$", "description": "Employee's provident fund contribution; overwritten when autoDeductions is true" },
+    "esi": { "type": ["number", "string"], "pattern": "^\\d+(\\.\\d+)?$", "description": "Employee's ESI contribution; overwritten when autoDeductions is true" },
+    "professionalTax": { "type": ["number", "string"], "pattern": "^\\d+(\\.\\d+)?$", "description": "Professional tax for the month; overwritten when autoDeductions is true" },
+    "tds": { "type": ["number", "string"], "pattern": "^\\d+(\\.\\d+)?$", "description": "Tax deducted at source on salary for the month, as worked out by the employer or a CA" },
+    "advances": { "type": ["number", "string"], "pattern": "^\\d+(\\.\\d+)?$", "description": "Salary advance recovered this month" },
+    "otherDeductions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "amount"],
+        "properties": {
+          "name": { "type": "string", "description": "Deduction name, e.g. Canteen, Loan instalment" },
+          "amount": { "type": ["number", "string"], "pattern": "^\\d+(\\.\\d+)?$", "description": "Amount for the month" }
+        }
+      },
+      "description": "Any other deduction, each with a name and an amount"
+    },
+    "deductionBasis": { "type": "array", "items": { "type": "string" }, "description": "How PF, ESI and professional tax were worked out; filled by the tool when autoDeductions is true" },
+    "notes": { "type": "string", "description": "Free text below the amount in words, e.g. a remark on leave" },
+    "footer": { "type": "string", "description": "Footer note" },
+    "signName": { "type": "string", "description": "Name of the person signing for the employer" }
+  }
+}

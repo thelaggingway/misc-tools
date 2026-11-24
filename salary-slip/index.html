@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Salary Slip</title>
+<style>
+  :root { --navy:#1e293b; --violet:#4f46e5; --gray:#475569; --muted:#94a3b8; --line:#e2e8f0; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: "Inter","Segoe UI",Helvetica,Arial,sans-serif; background:#f1f5f9; color:var(--gray); }
+  .app { display:grid; grid-template-columns: 420px 1fr; min-height:100vh; }
+  /* ---------- form ---------- */
+  .form { background:#fff; border-right:1px solid var(--line); padding:18px 20px 40px; overflow-y:auto; height:100vh; position:sticky; top:0; }
+  .form h1 { font-size:18px; color:var(--navy); margin:0 0 4px; }
+  .form h2 { font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:var(--violet); margin:20px 0 8px; }
+  .form label { display:block; font-size:12px; margin:8px 0 3px; color:var(--gray); }
+  .form input, .form textarea, .form select { width:100%; padding:7px 9px; border:1px solid #cbd5e1; border-radius:6px; font:inherit; font-size:13px; color:var(--navy); }
+  .form textarea { resize:vertical; min-height:60px; }
+  .row { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .row3 { display:grid; grid-template-columns:1.4fr .8fr; gap:6px; }
+  .item { border:1px solid var(--line); border-radius:8px; padding:8px 10px 10px; margin-bottom:8px; position:relative; }
+  .btn { display:inline-block; padding:8px 12px; border-radius:6px; border:1px solid #cbd5e1; background:#fff; cursor:pointer; font:inherit; font-size:13px; color:var(--navy); }
+  .btn.primary { background:var(--violet); border-color:var(--violet); color:#fff; font-weight:600; }
+  .btn.del { position:absolute; top:6px; right:8px; padding:0 7px; font-size:12px; color:#b91c1c; }
+  .actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:6px; }
+  .hint { font-size:11px; color:var(--muted); margin-top:4px; }
+  .hint.warn { color:#b45309; }
+  .check { display:flex; gap:8px; align-items:center; font-size:12px; margin:8px 0 0; }
+  .check input { width:auto; }
+  /* ---------- wage slip page ---------- */
+  .preview { padding:30px; display:flex; justify-content:center; }
+  .page { width:210mm; min-height:297mm; background:#fff; box-shadow:0 4px 24px rgba(15,23,42,.12); padding:18mm 20mm; font-size:10.5pt; line-height:1.45; display:flex; flex-direction:column; }
+  .warnbar { background:#fef3c7; border:1px solid #f59e0b; color:#92400e; border-radius:6px; padding:7px 10px; font-size:9pt; margin-bottom:12px; }
+  .hdr { display:flex; justify-content:space-between; align-items:flex-start; padding-bottom:12px; border-bottom:2px solid var(--navy); }
+  .hdr .name { font-size:19pt; font-weight:700; color:var(--navy); line-height:1.2; }
+  .hdr .addr { color:var(--gray); margin-top:2px; }
+  .hdr .ref { font-size:8pt; color:var(--muted); margin-top:3px; letter-spacing:.03em; }
+  .hdr .title { text-align:right; }
+  .hdr .title .t { font-size:16pt; font-weight:700; color:var(--violet); letter-spacing:.02em; }
+  .hdr .title .s { font-size:8pt; color:var(--muted); text-transform:uppercase; letter-spacing:.08em; }
+  .period { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:14px; padding:9px 12px; background:#f8fafc; border-radius:6px; }
+  .period div { font-size:9pt; }
+  .period span { display:block; color:var(--muted); font-size:7.5pt; text-transform:uppercase; letter-spacing:.07em; }
+  .period b { color:var(--navy); font-weight:600; }
+  .parties { display:grid; grid-template-columns:1.25fr 1fr; gap:24px; margin-top:20px; }
+  .sec { font-size:8.5pt; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--violet); margin-bottom:5px; }
+  .kv { display:grid; grid-template-columns:40mm 1fr; padding:1px 0; font-size:9.5pt; }
+  .kv span:first-child { color:var(--muted); }
+  .kv span:last-child { color:var(--navy); font-weight:500; }
+  .pre { white-space:pre-line; }
+  table.pay { width:100%; border-collapse:collapse; margin-top:22px; }
+  table.pay th { background:var(--navy); color:#fff; font-size:8.5pt; text-transform:uppercase; letter-spacing:.06em; padding:7px 10px; font-weight:700; text-align:left; }
+  table.pay td { padding:5px 10px; border-bottom:1px solid var(--line); font-size:9.5pt; }
+  table.pay td.lbl { color:var(--navy); }
+  table.pay .r { text-align:right; }
+  table.pay th.r { text-align:right; }
+  table.pay tfoot td { border-top:1.5px solid var(--navy); border-bottom:none; font-weight:700; color:var(--navy); padding-top:7px; }
+  .grand { display:flex; justify-content:space-between; align-items:baseline; margin-top:16px; padding:9px 12px; background:var(--navy); color:#fff; border-radius:6px; }
+  .grand .l { font-size:10pt; letter-spacing:.06em; text-transform:uppercase; font-weight:600; }
+  .grand .v { font-size:15pt; font-weight:700; }
+  .words { background:#f8fafc; border-radius:6px; padding:8px 12px; margin-top:10px; font-style:italic; font-size:9.5pt; color:var(--gray); }
+  .basis { margin-top:16px; }
+  .basis .sec { color:var(--muted); }
+  .basis ul { margin:0; padding-left:16px; font-size:8.5pt; color:var(--gray); }
+  .basis li { margin-bottom:2px; }
+  .notes { margin-top:14px; }
+  .notes .sec { color:var(--muted); }
+  .foot { display:flex; justify-content:space-between; align-items:flex-end; border-top:1px solid var(--line); margin-top:auto; padding-top:12px; }
+  .foot .eoe { font-size:8pt; color:var(--muted); max-width:60%; }
+  .sign { text-align:right; }
+  .sign .line { width:150px; border-top:1.5px solid var(--navy); margin:28px 0 4px auto; }
+  .sign .who { font-weight:700; color:var(--navy); }
+  .sign .role { font-size:8.5pt; color:var(--muted); }
+  @page { size:A4; margin:0; }
+  @media print {
+    body { background:#fff; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    .app { display:block; } .form { display:none; } .preview { padding:0; display:block; }
+    .page { box-shadow:none; width:100%; min-height:297mm; }
+  }
+  @media (max-width:1100px) { .app { grid-template-columns:1fr; } .form { height:auto; position:static; } .preview { overflow-x:auto; justify-content:flex-start; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <form class="form" id="f" onsubmit="return false">
+    <h1>Salary Slip</h1>
+    <div class="hint">Edits save automatically in this browser. “Download PDF” opens the print dialog — choose “Save as PDF”.</div>
+    <div class="actions" style="margin-top:12px">
+      <button class="btn primary" type="button" onclick="downloadPdf()">Download PDF</button>
+      <button class="btn" type="button" onclick="exportJson()">Export JSON</button>
+      <label class="btn" style="margin:0">Import JSON<input type="file" accept=".json" hidden onchange="importJson(this)"></label>
+      <button class="btn" type="button" onclick="resetDefaults()">Reset</button>
+    </div>
+
+    <h2>Employer</h2>
+    <label>Establishment name</label><input data-k="employerName">
+    <label>Address</label><input data-k="employerAddress">
+    <label>Registration numbers (LIN, GSTIN)</label><input data-k="employerRef">
+
+    <h2>Employee</h2>
+    <label>Name</label><input data-k="employeeName">
+    <label>Father's / mother's / spouse's name</label><input data-k="employeeGuardian">
+    <div class="row">
+      <div><label>Designation</label><input data-k="designation"></div>
+      <div><label>Employee code</label><input data-k="employeeCode"></div>
+      <div><label>Department</label><input data-k="department"></div>
+      <div><label>UAN</label><input data-k="uan"></div>
+      <div><label>ESI number</label><input data-k="esiNumber"></div>
+      <div><label>PAN</label><input data-k="pan" placeholder="ABCPE1234F"></div>
+      <div><label>Bank account</label><input data-k="bankAccount"></div>
+      <div><label>IFSC</label><input data-k="ifsc" placeholder="HDFC0000000"></div>
+    </div>
+
+    <h2>Wage period</h2>
+    <div class="row">
+      <div><label>Month</label><input type="month" data-k="month"></div>
+      <div><label>Slip number</label><input data-k="slipNo"></div>
+      <div><label>Date of issue</label><input type="date" data-k="issueDate"></div>
+      <div><label>Days paid</label><input type="number" step="any" data-k="daysPaid" placeholder="all days"></div>
+      <div><label>Loss of pay (days)</label><input type="number" step="any" data-k="lopDays"></div>
+    </div>
+
+    <h2>Earnings</h2>
+    <div class="row">
+      <div><label>Basic</label><input type="number" step="any" data-k="basic"></div>
+      <div><label>Dearness allowance</label><input type="number" step="any" data-k="da"></div>
+      <div><label>House rent allowance</label><input type="number" step="any" data-k="hra"></div>
+      <div><label>Overtime</label><input type="number" step="any" data-k="overtime"></div>
+    </div>
+    <label>Other allowances</label>
+    <div id="allowances"></div>
+    <button class="btn" type="button" onclick="addRow('allowances')">+ Add allowance</button>
+
+    <h2>Deductions</h2>
+    <label class="check"><input type="checkbox" data-k="autoDeductions"> Work out PF, ESI and professional tax from the rules</label>
+    <div class="hint">Uses the dated files in <code>rules/</code> (EPFO, ESIC, the state's professional tax). In the browser this needs the page opened from a local web server; the CLI always computes them.</div>
+    <div class="row">
+      <div><label>State where the employee works</label><input data-k="state" list="states" placeholder="Karnataka"></div>
+      <div><label>Gender (for states that differ)</label>
+        <select data-k="gender">
+          <option value="">—</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+          <option value="other">Other</option>
+        </select></div>
+    </div>
+    <datalist id="states">
+      <option value="Maharashtra"><option value="Karnataka"><option value="Tamil Nadu">
+      <option value="Telangana"><option value="Gujarat"><option value="Madhya Pradesh">
+    </datalist>
+    <label class="check"><input type="checkbox" data-k="pfApplicable"> Establishment is covered by EPF</label>
+    <label class="check"><input type="checkbox" data-k="esiApplicable"> Establishment is covered by ESIC</label>
+    <label class="check"><input type="checkbox" data-k="esiDisability"> Employee is a person with disability (higher ESI ceiling)</label>
+    <div class="row">
+      <div><label>PF (employee)</label><input type="number" step="any" data-k="pf"></div>
+      <div><label>ESI (employee)</label><input type="number" step="any" data-k="esi"></div>
+      <div><label>Professional tax</label><input type="number" step="any" data-k="professionalTax"></div>
+      <div><label>TDS</label><input type="number" step="any" data-k="tds"></div>
+      <div><label>Salary advance</label><input type="number" step="any" data-k="advances"></div>
+    </div>
+    <label>Other deductions</label>
+    <div id="otherDeductions"></div>
+    <button class="btn" type="button" onclick="addRow('otherDeductions')">+ Add deduction</button>
+
+    <h2>Notes and footer</h2>
+    <textarea data-k="notes" rows="2" placeholder="e.g. 2 days of unpaid leave in November"></textarea>
+    <label>Footer note</label><input data-k="footer">
+    <label>Signatory name</label><input data-k="signName">
+  </form>
+
+  <div class="preview"><div class="page" id="page"></div></div>
+</div>
+
+<script src="../shared/india.js"></script>
+<script src="../shared/payroll.js"></script>
+<script>
+const DEFAULTS = {
+  employerName: "Your Business Name",
+  employerAddress: "Street, City, State PIN",
+  employerRef: "",
+  slipNo: "PAY/2627/01",
+  issueDate: new Date().toISOString().slice(0, 10),
+  month: new Date().toISOString().slice(0, 7),
+  employeeName: "Employee Name", employeeGuardian: "", designation: "", employeeCode: "", department: "",
+  uan: "", esiNumber: "", pan: "", bankAccount: "", ifsc: "",
+  daysPaid: "", lopDays: 0,
+  basic: 0, da: 0, hra: 0, overtime: 0,
+  allowances: [{ name: "Conveyance", amount: 0 }],
+  state: "", gender: "",
+  autoDeductions: false, pfApplicable: true, esiApplicable: true, esiDisability: false,
+  pf: 0, esi: 0, professionalTax: 0, tds: 0, advances: 0,
+  otherDeductions: [], deductionBasis: [],
+  notes: "",
+  footer: "Wage slip under rule 52 of the Code on Wages (Central) Rules, 2026 (Form V), read with section 50(3) of the Code on Wages, 2019.",
+  signName: "Your Name",
+};
+const KEY = "salary-slip-v1";
+let S = load();
+let RULES = null;       // rules/*.json, fetched when the page is served over http; the CLI injects the figures instead
+
+function load() {
+  if (window.SALARY_DATA) return { ...structuredClone(DEFAULTS), ...window.SALARY_DATA };
+  try { return { ...structuredClone(DEFAULTS), ...JSON.parse(localStorage.getItem(KEY)) }; } catch { return structuredClone(DEFAULTS); }
+}
+function save() { localStorage.setItem(KEY, JSON.stringify(S)); }
+
+// Read the dated rule files. From file:// the browser will not fetch a neighbouring file, so this
+// returns {} and the page shows the figures the CLI worked out (or asks for them to be typed).
+fetchRules({ pfEsi: "../rules/pf-esi.json", professionalTax: "../rules/professional-tax.json" })
+  .then(r => { if (r.pfEsi && r.professionalTax) { RULES = r; render(); } });
+
+function periodText(m) {
+  try {
+    const a = fmtDate(monthStart(m)), b = fmtDate(monthEnd(m));
+    return a.slice(3) === b.slice(3) ? `${a.slice(0, 2)} – ${b}` : `${a} – ${b}`;
+  } catch { return ""; }
+}
+
+function render() {
+  const rows = earningRows(S);
+  const gross = rows.reduce((a, r) => a + r[1], 0);
+  const total = (() => { try { return daysInMonth(S.month); } catch { return 0; } })();
+  const lop = Number(S.lopDays) || 0;
+  const paid = S.daysPaid !== "" && S.daysPaid != null ? Number(S.daysPaid) || 0 : Math.max(total - lop, 0);
+
+  // Deductions: computed from the rules when the page can read them, otherwise taken as given.
+  let auto = null, autoErr = "";
+  if (S.autoDeductions && RULES) {
+    try { auto = deductions(S, RULES); } catch (e) { autoErr = e.message; }
+  }
+  if (auto) {
+    S.pf = auto.pf; S.esi = auto.esi; S.professionalTax = auto.professionalTax; S.deductionBasis = auto.deductionBasis;
+  }
+  const n = v => Number(v) || 0;
+  const dedRows = [["Provident fund", n(S.pf)], ["ESI", n(S.esi)], ["Professional tax", n(S.professionalTax)],
+    ["Tax deducted at source", n(S.tds)], ["Salary advance", n(S.advances)]]
+    .concat((S.otherDeductions || []).map(d => [d.name || "Deduction", n(d.amount)]))
+    .filter(r => r[1] !== 0);
+  const dedTotal = dedRows.reduce((a, r) => a + r[1], 0);
+  const net = gross - dedTotal;
+  const spaced = v => inr(v).replace("₹", "₹ ");
+  const kv = (k, v) => v ? `<div class="kv"><span>${k}</span><span>${esc(v)}</span></div>` : "";
+  const basis = (S.deductionBasis || []).length && S.autoDeductions
+    ? `<div class="basis"><div class="sec">Basis of deductions</div><ul>${S.deductionBasis.map(b => `<li>${esc(b)}</li>`).join("")}</ul></div>` : "";
+  const notComputed = S.autoDeductions && !(S.deductionBasis || []).length;
+  const nRows = Math.max(rows.length, dedRows.length);
+  const line = i => `<tr><td class="lbl">${esc(rows[i] ? rows[i][0] : "")}</td><td class="r">${rows[i] ? inr(rows[i][1]) : ""}</td>
+    <td class="lbl">${esc(dedRows[i] ? dedRows[i][0] : "")}</td><td class="r">${dedRows[i] ? inr(dedRows[i][1]) : ""}</td></tr>`;
+
+  document.getElementById("page").innerHTML = `
+    ${notComputed ? `<div class="warnbar">PF, ESI and professional tax are not worked out on this slip: the rules could not be read here. Use the CLI, or turn the checkbox off and type the amounts.</div>` : ""}
+    <div class="hdr">
+      <div><div class="name">${esc(S.employerName)}</div><div class="addr">${esc(S.employerAddress)}</div>
+        ${S.employerRef ? `<div class="ref">${esc(S.employerRef)}</div>` : ""}</div>
+      <div class="title"><div class="t">WAGE SLIP</div><div class="s">${esc(monthLabel(S.month))}</div>
+        ${S.slipNo ? `<div class="s">${esc(S.slipNo)}</div>` : ""}</div>
+    </div>
+    <div class="period">
+      <div><span>Wage period</span><b>${periodText(S.month)}</b></div>
+      <div><span>Attendance</span><b>${paid} of ${total} days</b></div>
+      <div><span>Loss of pay</span><b>${lop} day${lop === 1 ? "" : "s"}</b></div>
+      <div><span>Date of issue</span><b>${esc(fmtDate(S.issueDate))}</b></div>
+    </div>
+    <div class="parties">
+      <div><div class="sec">Employee</div>
+        ${kv("Name", S.employeeName)}
+        ${kv("Father/mother/spouse", S.employeeGuardian)}
+        ${kv("Designation", S.designation)}
+        ${kv("Employee code", S.employeeCode)}
+        ${kv("Department", S.department)}
+        ${kv("UAN", S.uan)}
+      </div>
+      <div><div class="sec">Payment</div>
+        ${kv("ESI number", S.esiNumber)}
+        ${kv("PAN", S.pan)}
+        ${kv("Bank account", S.bankAccount)}
+        ${kv("IFSC", S.ifsc)}
+      </div>
+    </div>
+    <table class="pay">
+      <thead><tr><th>Earnings</th><th class="r">Amount</th><th>Deductions</th><th class="r">Amount</th></tr></thead>
+      <tbody>${Array.from({ length: nRows }, (_, i) => line(i)).join("")}</tbody>
+      <tfoot><tr><td>Gross earnings</td><td class="r">${inr(gross)}</td><td>Total deductions</td><td class="r">${inr(dedTotal)}</td></tr></tfoot>
+    </table>
+    <div class="grand"><span class="l">Net pay</span><span class="v">${spaced(net)}</span></div>
+    <div class="words">${amountWords(net)}</div>
+    ${basis}
+    ${S.notes ? `<div class="notes"><div class="sec">Notes</div><div class="pre">${esc(S.notes)}</div></div>` : ""}
+    <div class="foot">
+      <div class="eoe">${esc(S.footer)}</div>
+      <div class="sign"><div class="line"></div><div class="who">${esc(S.signName)}</div><div class="role">For ${esc(S.employerName)}</div></div>
+    </div>`;
+
+  const hint = document.getElementById("rulesHint");
+  if (hint) hint.remove();
+  if (S.autoDeductions && !RULES) {
+    const d = document.createElement("div");
+    d.id = "rulesHint"; d.className = "hint warn";
+    d.textContent = autoErr || "Could not read rules/ here: the figures shown are the ones the CLI worked out. Open this page from a local web server to compute them live, or turn the checkbox off and type the amounts.";
+    document.querySelector(".form").appendChild(d);
+  } else if (autoErr) {
+    const d = document.createElement("div");
+    d.id = "rulesHint"; d.className = "hint warn"; d.textContent = autoErr;
+    document.querySelector(".form").appendChild(d);
+  }
+}
+
+function renderRows(kind) {
+  document.getElementById(kind).innerHTML = (S[kind] || []).map((it, n) => `
+    <div class="item">
+      <button class="btn del" type="button" onclick="delRow('${kind}',${n})">✕</button>
+      <div class="row3">
+        <div><label>Name</label><input data-a="${kind}" data-i="${n}" data-f="name" value="${esc(it.name)}"></div>
+        <div><label>Amount (₹)</label><input type="number" step="any" data-a="${kind}" data-i="${n}" data-f="amount" value="${esc(it.amount)}"></div>
+      </div>
+    </div>`).join("");
+}
+function addRow(kind) { S[kind].push({ name: "", amount: 0 }); renderRows(kind); save(); render(); }
+function delRow(kind, n) { S[kind].splice(n, 1); renderRows(kind); save(); render(); }
+
+function fillForm() {
+  document.querySelectorAll("[data-k]").forEach(el => el.type === "checkbox" ? el.checked = !!S[el.dataset.k] : el.value = S[el.dataset.k] ?? "");
+  renderRows("allowances"); renderRows("otherDeductions");
+}
+function onEdit(e) {
+  const el = e.target;
+  if (el.dataset.k) S[el.dataset.k] = el.type === "checkbox" ? el.checked : el.value;
+  else if (el.dataset.a) S[el.dataset.a][+el.dataset.i][el.dataset.f] = el.value;
+  else return;
+  save(); render();
+}
+for (const ev of ["input", "change"]) document.getElementById("f").addEventListener(ev, onEdit);
+
+function downloadPdf() {
+  const old = document.title;
+  document.title = (S.slipNo || "wage-slip").replace(/[\/\\]/g, "_");
+  window.print(); document.title = old;
+}
+function exportJson() {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(S, null, 2)], { type: "application/json" }));
+  a.download = (S.slipNo || "wage-slip").replace(/[\/\\]/g, "_") + ".json"; a.click();
+}
+function importJson(inp) {
+  const f = inp.files[0]; if (!f) return;
+  f.text().then(t => { S = { ...structuredClone(DEFAULTS), ...JSON.parse(t) }; save(); fillForm(); render(); });
+  inp.value = "";
+}
+function resetDefaults() { if (confirm("Reset all fields to the defaults?")) { S = structuredClone(DEFAULTS); save(); fillForm(); render(); } }
+
+fillForm(); render();
+</script>
+</body>
+</html>
