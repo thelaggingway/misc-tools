@@ -36,10 +36,11 @@ in the document, item rates in that currency, plus `exchangeRate` (rupees per un
 `exchangeRateDate` (always required: the rupee value matters for FEMA and income tax even without GST).
 
 **Owner not GST-registered** (no `fromGstin` in the profile): leave out `exportMode` and `lut`; the tool prints a
-plain INVOICE without the Rule 46 endorsement, LUT or IGST, and rejects those fields. Small service exporters can
-usually bill clients abroad without GST registration, so do not push the owner to register. If their turnover
-is near the GST registration limit, suggest they confirm with their chartered accountant whether they need to
-register. Do not quote a limit from memory.
+plain INVOICE without the Rule 46 endorsement, LUT or IGST, and rejects those fields. This tool does not decide
+whether the owner must register for GST: that depends on their turnover and the kind of supply, and this repo has
+no verified rule file for it yet. Make the invoice they ask for, and if they have not already confirmed it, suggest
+they check with their chartered accountant whether exporting requires them to register. Do not state a
+registration limit or exemption from memory.
 
 **Owner GST-registered** (`fromGstin` set): also set `exportMode`:
 - `"lut"` when the owner has filed a Letter of Undertaking for this financial year: add `lut: { "arn", "fy" }`
