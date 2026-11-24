@@ -248,7 +248,7 @@ function render() {
     <td class="lbl">${esc(dedRows[i] ? dedRows[i][0] : "")}</td><td class="r">${dedRows[i] ? inr(dedRows[i][1]) : ""}</td></tr>`;
 
   document.getElementById("page").innerHTML = `
-    ${notComputed ? `<div class="warnbar">PF, ESI and professional tax are not worked out on this slip: the rules could not be read here. Use the CLI, or turn the checkbox off and type the amounts.</div>` : ""}
+    ${notComputed ? `<div class="warnbar">PF, ESI and professional tax are not worked out on this slip: ${autoErr ? esc(autoErr) : "the rules could not be read here. Use the CLI, or turn the checkbox off and type the amounts."}</div>` : ""}
     <div class="hdr">
       <div><div class="name">${esc(S.employerName)}</div><div class="addr">${esc(S.employerAddress)}</div>
         ${S.employerRef ? `<div class="ref">${esc(S.employerRef)}</div>` : ""}</div>

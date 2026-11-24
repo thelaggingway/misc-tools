@@ -138,6 +138,12 @@
   // ---- all three, with the lines a wage slip prints to say how they were worked out ----
   // rules: { pfEsi: { entries }, professionalTax: { entries } } as loaded from rules/*.json.
   function deductions(d, rules) {
+    // Refuse a month the rule files do not vouch for (the browser passes the raw files; the CLI's
+    // loadRules already refuses, so this only matters there but keeps both paths the same).
+    for (const [name, r] of [["pf-esi", rules.pfEsi], ["professional-tax", rules.professionalTax]]) {
+      if (r && r.coverage && d.month && (monthStart(d.month) < r.coverage.from || monthEnd(d.month) > r.coverage.to))
+        throw new Error(`rules/${name}.json covers ${r.coverage.from} to ${r.coverage.to}, not ${d.month}. Check its sources and update it, or turn off automatic deductions and type the amounts.`);
+    }
     const out = { deductionBasis: [] };
     const pfEntries = (rules.pfEsi && rules.pfEsi.entries) || [];
     const ptEntries = (rules.professionalTax && rules.professionalTax.entries) || [];
