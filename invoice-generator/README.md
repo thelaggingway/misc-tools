@@ -30,7 +30,7 @@ echo '{"invNo":"INV/1","items":[{"desc":"Design","rate":5000}]}' | node invoice-
 
 ## Numbering (`--next`)
 `--next <folder>` prints the next number as `PREFIX/<financial year>/NN`, one more than the highest number
-already used in that series and financial year (`TATVARTH/2627/02` → `TATVARTH/2627/03`). The financial year runs
+already used in that series and financial year (`ACME/2627/02` → `ACME/2627/03`). The financial year runs
 April to March, so on 1 April the series restarts at `/2728/01`. It reads `invNo` from every JSON and the
 `PREFIX_2627_NN` part of every file name in the folder, and in all of `documents/` when the folder is
 `documents/<client>`, so a series shared by several clients (`RC/…`) is never reused. Gaps are never refilled.
