@@ -1,0 +1,10 @@
+{
+  "fromName": "Asha Rao",
+  "fromAddress": "12, MG Road, Bengaluru, Karnataka 560001",
+  "fromTag": "UNREGISTERED",
+  "toName": "Example Technologies Pvt Ltd",
+  "toAddress": "4th Floor, Tower B\nHitec City\nHyderabad\nTelangana 500081",
+  "place": "Telangana",
+  "bankName": "Asha Rao", "bank": "HDFC Bank", "acct": "000000000000", "ifsc": "HDFC0000000",
+  "terms": "Due on receipt", "signName": "Asha Rao"
+}

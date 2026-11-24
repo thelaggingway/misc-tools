@@ -1,0 +1,10 @@
+{
+  "invNo": "EXAMPLE/2627/01",
+  "date": "2026-11-24",
+  "due": "2026-12-24",
+  "items": [
+    { "desc": "Business Consulting", "sac": "998312", "qty": 1, "unit": "UNITS", "rate": 125000 },
+    { "desc": "Workshop", "sac": "998312", "qty": 2, "unit": "DAYS", "rate": 20000 }
+  ],
+  "taxMode": "igst"
+}

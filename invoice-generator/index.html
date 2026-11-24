@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Invoice Generator</title>
+<style>
+  :root { --navy:#1e293b; --violet:#4f46e5; --gray:#475569; --muted:#94a3b8; --line:#e2e8f0; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: "Inter","Segoe UI",Helvetica,Arial,sans-serif; background:#f1f5f9; color:var(--gray); }
+  .app { display:grid; grid-template-columns: 420px 1fr; min-height:100vh; }
+  /* ---------- form ---------- */
+  .form { background:#fff; border-right:1px solid var(--line); padding:18px 20px 40px; overflow-y:auto; height:100vh; position:sticky; top:0; }
+  .form h1 { font-size:18px; color:var(--navy); margin:0 0 4px; }
+  .form h2 { font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:var(--violet); margin:20px 0 8px; }
+  .form label { display:block; font-size:12px; margin:8px 0 3px; color:var(--gray); }
+  .form input, .form textarea, .form select { width:100%; padding:7px 9px; border:1px solid #cbd5e1; border-radius:6px; font:inherit; font-size:13px; color:var(--navy); }
+  .form textarea { resize:vertical; min-height:60px; }
+  .row { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .item { border:1px solid var(--line); border-radius:8px; padding:8px 10px 10px; margin-bottom:8px; position:relative; }
+  .item .row3 { display:grid; grid-template-columns:1.2fr .7fr .9fr 1.2fr; gap:6px; }
+  .btn { display:inline-block; padding:8px 12px; border-radius:6px; border:1px solid #cbd5e1; background:#fff; cursor:pointer; font:inherit; font-size:13px; color:var(--navy); }
+  .btn.primary { background:var(--violet); border-color:var(--violet); color:#fff; font-weight:600; }
+  .btn.del { position:absolute; top:6px; right:8px; padding:0 7px; font-size:12px; color:#b91c1c; }
+  .actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:6px; }
+  .hint { font-size:11px; color:var(--muted); margin-top:4px; }
+  /* ---------- invoice page ---------- */
+  .preview { padding:30px; display:flex; justify-content:center; }
+  .page { width:210mm; min-height:297mm; background:#fff; box-shadow:0 4px 24px rgba(15,23,42,.12); padding:18mm 20mm; font-size:10.5pt; line-height:1.45; }
+  .hdr { display:flex; justify-content:space-between; align-items:flex-start; padding-bottom:12px; border-bottom:2px solid var(--navy); }
+  .hdr .name { font-size:19pt; font-weight:700; color:var(--navy); line-height:1.2; }
+  .hdr .addr { color:var(--gray); margin-top:2px; }
+  .hdr .title { text-align:right; }
+  .hdr .title .t { font-size:16pt; font-weight:700; color:var(--violet); letter-spacing:.02em; }
+  .hdr .title .s { font-size:8pt; color:var(--muted); text-transform:uppercase; letter-spacing:.08em; }
+  .parties { display:grid; grid-template-columns:1fr 1fr; margin-top:22px; }
+  .sec { font-size:8.5pt; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--violet); margin-bottom:4px; }
+  .billname { font-weight:700; color:var(--navy); }
+  .pre { white-space:pre-line; }
+  .details b { color:var(--gray); font-weight:600; }
+  table.items { width:100%; border-collapse:collapse; margin-top:24px; }
+  table.items th { background:var(--navy); color:#fff; font-size:8.5pt; text-transform:uppercase; letter-spacing:.06em; padding:8px 10px; font-weight:700; }
+  table.items td { padding:9px 10px; border-bottom:1px solid var(--line); }
+  table.items .l { text-align:left; } table.items .c { text-align:center; } table.items .r { text-align:right; }
+  .totals { margin-left:auto; width:34%; margin-top:14px; }
+  .totals div { display:flex; justify-content:space-between; padding:3px 0; }
+  .totals .grand { border-top:2px solid var(--navy); margin-top:4px; padding-top:7px; font-weight:700; font-size:12pt; color:var(--navy); }
+  .words { background:#f8fafc; border-radius:6px; padding:8px 12px; margin-top:16px; font-style:italic; font-size:9.5pt; color:var(--gray); }
+  .bank { margin-top:20px; }
+  .bank .sec { color:var(--muted); }
+  .bank .kv { display:grid; grid-template-columns:1fr 1fr; padding:2px 0; }
+  .bank .kv span:first-child { color:var(--muted); }
+  .bank .kv span:last-child { color:var(--navy); font-weight:500; }
+  .foot { display:flex; justify-content:space-between; align-items:flex-end; border-top:1px solid var(--line); margin-top:26px; padding-top:14px; }
+  .foot .eoe { font-size:8.5pt; color:var(--muted); }
+  .sign { text-align:right; }
+  .sign .line { width:150px; border-top:1.5px solid var(--navy); margin:30px 0 4px auto; }
+  .sign .who { font-weight:700; color:var(--navy); }
+  .sign .role { font-size:8.5pt; color:var(--muted); }
+  @page { size:A4; margin:0; }
+  @media print {
+    body { background:#fff; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    .app { display:block; } .form { display:none; } .preview { padding:0; }
+    .page { box-shadow:none; width:auto; min-height:auto; }
+  }
+  @media (max-width:1100px) { .app { grid-template-columns:1fr; } .form { height:auto; position:static; } .preview { overflow-x:auto; justify-content:flex-start; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <form class="form" id="f" onsubmit="return false">
+    <h1>Invoice Generator</h1>
+    <div class="hint">Edits save automatically in this browser. “Download PDF” opens the print dialog — choose “Save as PDF”.</div>
+    <div class="actions" style="margin-top:12px">
+      <button class="btn primary" type="button" onclick="downloadPdf()">Download PDF</button>
+      <button class="btn" type="button" onclick="exportJson()">Export JSON</button>
+      <label class="btn" style="margin:0">Import JSON<input type="file" accept=".json" hidden onchange="importJson(this)"></label>
+      <button class="btn" type="button" onclick="resetDefaults()">Reset</button>
+    </div>
+
+    <h2>From (you)</h2>
+    <label>Name</label><input data-k="fromName">
+    <label>Address</label><input data-k="fromAddress">
+    <label>Tag under “INVOICE” (e.g. UNREGISTERED or GSTIN: …)</label><input data-k="fromTag">
+
+    <h2>Bill to</h2>
+    <label>Client name</label><input data-k="toName">
+    <label>Client address (one line per row)</label><textarea data-k="toAddress" rows="4"></textarea>
+
+    <h2>Invoice details</h2>
+    <div class="row">
+      <div><label>Invoice No.</label><input data-k="invNo"></div>
+      <div><label>Place of supply</label><input data-k="place"></div>
+      <div><label>Date</label><input type="date" data-k="date"></div>
+      <div><label>Due date</label><input type="date" data-k="due"></div>
+    </div>
+
+    <h2>Line items</h2>
+    <div id="items"></div>
+    <button class="btn" type="button" onclick="addItem()">+ Add item</button>
+
+    <h2>Tax</h2>
+    <div class="row">
+      <div><label>Tax type</label>
+        <select data-k="taxMode">
+          <option value="none">None (N/A)</option>
+          <option value="cgst_sgst">CGST + SGST (intra-state)</option>
+          <option value="igst">IGST (inter-state)</option>
+        </select></div>
+      <div><label>Total GST rate %</label><input type="number" step="0.01" data-k="taxRate"></div>
+    </div>
+
+    <h2>Bank details</h2>
+    <label>Account name</label><input data-k="bankName">
+    <div class="row">
+      <div><label>Bank</label><input data-k="bank"></div>
+      <div><label>Account No.</label><input data-k="acct"></div>
+      <div><label>IFSC</label><input data-k="ifsc"></div>
+      <div><label>Payment terms</label><input data-k="terms"></div>
+    </div>
+
+    <h2>Footer</h2>
+    <label>Footer note</label><input data-k="footer">
+    <label>Signatory name</label><input data-k="signName">
+  </form>
+
+  <div class="preview"><div class="page" id="page"></div></div>
+</div>
+
+<script>
+const DEFAULTS = {
+  fromName: "Your Name",
+  fromAddress: "Street, City, State PIN",
+  fromTag: "UNREGISTERED",
+  toName: "Client Pvt Ltd",
+  toAddress: "Address line 1\nCity\nState PIN",
+  invNo: "INV/2627/01", date: new Date().toISOString().slice(0, 10), due: "", place: "State",
+  items: [{ desc: "Consulting", sac: "998312", qty: 1, unit: "UNITS", rate: 0 }],
+  taxMode: "none", taxRate: 18,
+  bankName: "Your Name", bank: "Bank", acct: "", ifsc: "", terms: "Due on receipt",
+  footer: "E&OE — Subject to jurisdiction of courts in India", signName: "Your Name",
+};
+const KEY = "invoice-generator-v1";
+let S = load();
+
+function load() {
+  // The CLI (cli.mjs) injects window.INVOICE_DATA; humans get their last edits from localStorage.
+  if (window.INVOICE_DATA) return { ...structuredClone(DEFAULTS), ...window.INVOICE_DATA };
+  try { return { ...structuredClone(DEFAULTS), ...JSON.parse(localStorage.getItem(KEY)) }; } catch { return structuredClone(DEFAULTS); } }
+function save() { localStorage.setItem(KEY, JSON.stringify(S)); }
+
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c]));
+const inr = n => "₹" + Number(n || 0).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const fmtDate = d => { if (!d) return ""; const [y,m,day] = d.split("-").map(Number);
+  return new Date(y, m-1, day).toLocaleDateString("en-GB", { day:"2-digit", month:"short", year:"numeric" }); };
+
+// Indian-system amount in words: "Rupees One Lakh Only"
+const ONES = ["","One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Eleven","Twelve","Thirteen","Fourteen","Fifteen","Sixteen","Seventeen","Eighteen","Nineteen"];
+const TENS = ["","","Twenty","Thirty","Forty","Fifty","Sixty","Seventy","Eighty","Ninety"];
+function two(n) { return n < 20 ? ONES[n] : TENS[Math.floor(n/10)] + (n%10 ? " " + ONES[n%10] : ""); }
+function three(n) { const h = Math.floor(n/100), r = n%100; return [h ? ONES[h] + " Hundred" : "", r ? two(r) : ""].filter(Boolean).join(" "); }
+function words(n) {
+  if (n === 0) return "Zero";
+  const parts = []; const cr = Math.floor(n/1e7); n %= 1e7;
+  if (cr) parts.push(words(cr) + " Crore");
+  const l = Math.floor(n/1e5); n %= 1e5; if (l) parts.push(two(l) + " Lakh");
+  const t = Math.floor(n/1e3); n %= 1e3; if (t) parts.push(two(t) + " Thousand");
+  if (n) parts.push(three(n));
+  return parts.join(" ");
+}
+function amountWords(x) {
+  const totalPaise = Math.round(Math.abs(x) * 100);
+  const rupees = Math.floor(totalPaise / 100), paise = totalPaise % 100;
+  return (x < 0 && totalPaise ? "Minus " : "") + "Rupees " + words(rupees) + (paise ? " and " + two(paise) + " Paise" : "") + " Only";
+}
+
+function render() {
+  const items = S.items.map(i => ({ ...i, amount: (Number(i.qty)||0) * (Number(i.rate)||0) }));
+  const sub = items.reduce((a, i) => a + i.amount, 0);
+  const rate = Number(S.taxRate) || 0;
+  let taxRows = `<div><span>Tax</span><span>N/A</span></div>`, tax = 0;
+  if (S.taxMode === "cgst_sgst") { const h = sub * rate / 200; tax = 2*h;
+    taxRows = `<div><span>CGST @ ${rate/2}%</span><span>${inr(h)}</span></div><div><span>SGST @ ${rate/2}%</span><span>${inr(h)}</span></div>`; }
+  if (S.taxMode === "igst") { tax = sub * rate / 100; taxRows = `<div><span>IGST @ ${rate}%</span><span>${inr(tax)}</span></div>`; }
+  const total = sub + tax;
+  const spaced = v => inr(v).replace("₹", "₹ ");
+
+  document.getElementById("page").innerHTML = `
+    <div class="hdr">
+      <div><div class="name">${esc(S.fromName)}</div><div class="addr">${esc(S.fromAddress)}</div></div>
+      <div class="title"><div class="t">INVOICE</div><div class="s">${esc(S.fromTag)}</div></div>
+    </div>
+    <div class="parties">
+      <div><div class="sec">Bill To</div><div class="billname">${esc(S.toName)}</div><div class="pre">${esc(S.toAddress)}</div></div>
+      <div class="details"><div class="sec">Invoice Details</div>
+        <div><b>Invoice No:</b> ${esc(S.invNo)}</div>
+        <div><b>Date:</b> ${fmtDate(S.date)}</div>
+        <div><b>Due:</b> ${fmtDate(S.due)}</div>
+        <div><b>Place of Supply:</b> ${esc(S.place)}</div></div>
+    </div>
+    <table class="items">
+      <thead><tr><th class="l" style="width:5%">#</th><th class="c">Description</th><th class="c" style="width:11%">SAC</th>
+        <th class="c" style="width:7%">Qty</th><th class="c" style="width:9%">Unit</th><th class="r" style="width:16%">Rate</th><th class="r" style="width:17%">Amount</th></tr></thead>
+      <tbody>${items.map((i, n) => `<tr><td class="l">${n+1}</td><td class="l">${esc(i.desc)}</td><td class="c">${esc(i.sac)}</td>
+        <td class="c">${esc(i.qty)}</td><td class="c">${esc(i.unit)}</td><td class="r">${inr(i.rate)}</td><td class="r">${inr(i.amount)}</td></tr>`).join("")}</tbody>
+    </table>
+    <div class="totals">
+      <div><span>Subtotal</span><span>${spaced(sub)}</span></div>
+      ${taxRows}
+      <div class="grand"><span>Total</span><span>${spaced(total)}</span></div>
+    </div>
+    <div class="words">${amountWords(total)}</div>
+    <div class="bank"><div class="sec">Bank Details</div>
+      ${[["Account Name",S.bankName],["Bank",S.bank],["Account No.",S.acct],["IFSC",S.ifsc],["Payment Terms",S.terms]]
+        .map(([k,v]) => `<div class="kv"><span>${k}</span><span>${esc(v)}</span></div>`).join("")}
+    </div>
+    <div class="foot">
+      <div class="eoe">${esc(S.footer)}</div>
+      <div class="sign"><div class="line"></div><div class="who">${esc(S.signName)}</div><div class="role">Authorised Signatory</div></div>
+    </div>`;
+}
+
+function renderItems() {
+  document.getElementById("items").innerHTML = S.items.map((i, n) => `
+    <div class="item">
+      ${S.items.length > 1 ? `<button class="btn del" type="button" onclick="delItem(${n})">✕</button>` : ""}
+      <label>Description</label><input data-i="${n}" data-f="desc" value="${esc(i.desc)}">
+      <div class="row3">
+        <div><label>SAC</label><input data-i="${n}" data-f="sac" value="${esc(i.sac)}"></div>
+        <div><label>Qty</label><input type="number" step="any" data-i="${n}" data-f="qty" value="${esc(i.qty)}"></div>
+        <div><label>Unit</label><input data-i="${n}" data-f="unit" value="${esc(i.unit)}"></div>
+        <div><label>Rate (₹)</label><input type="number" step="any" data-i="${n}" data-f="rate" value="${esc(i.rate)}"></div>
+      </div>
+    </div>`).join("");
+}
+function addItem() { S.items.push({ desc:"", sac:"", qty:1, unit:"UNITS", rate:0 }); renderItems(); save(); render(); }
+function delItem(n) { S.items.splice(n, 1); renderItems(); save(); render(); }
+
+function fillForm() { document.querySelectorAll("[data-k]").forEach(el => el.value = S[el.dataset.k] ?? ""); renderItems(); }
+document.getElementById("f").addEventListener("input", e => {
+  const el = e.target;
+  if (el.dataset.k) S[el.dataset.k] = el.value;
+  else if (el.dataset.i) S.items[+el.dataset.i][el.dataset.f] = el.value;
+  else return;
+  save(); render();
+});
+
+function downloadPdf() {
+  const old = document.title;
+  document.title = (S.invNo || "invoice").replace(/[\/\\]/g, "_"); // default file name e.g. TATVARTH_2627_01.pdf
+  window.print(); document.title = old;
+}
+function exportJson() {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(S, null, 2)], { type:"application/json" }));
+  a.download = (S.invNo || "invoice").replace(/[\/\\]/g, "_") + ".json"; a.click();
+}
+function importJson(inp) {
+  const f = inp.files[0]; if (!f) return;
+  f.text().then(t => { S = { ...structuredClone(DEFAULTS), ...JSON.parse(t) }; save(); fillForm(); render(); });
+  inp.value = "";
+}
+function resetDefaults() { if (confirm("Reset all fields to the defaults?")) { S = structuredClone(DEFAULTS); save(); fillForm(); render(); } }
+
+fillForm(); render();
+</script>
+</body>
+</html>

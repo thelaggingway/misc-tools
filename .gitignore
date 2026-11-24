@@ -1,0 +1,4 @@
+private/
+*.local.json
+*.pdf
+.amp/
