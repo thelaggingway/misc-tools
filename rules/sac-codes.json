@@ -1,0 +1,603 @@
+{
+  "name": "sac-codes",
+  "description": "SAC (services accounting) codes a freelancer or small business commonly bills under, with the GST rate on each, from Notification 11/2017-Central Tax (Rate) as amended by 15/2025 (22 September 2025) and 06/2026 (1 November 2026). Rates are total GST: the notification states central tax (2.5 means 5% GST, 9 means 18% GST). Service descriptions are from the Annexure to that notification (Scheme of Classification of Services). Coverage runs to the end of FY 2026-27 because nothing further is notified for it; re-check after any GST Council meeting.",
+  "coverage": { "from": "2025-09-22", "to": "2027-03-31" },
+  "checked_on": "2026-11-24",
+  "sources": [
+    {
+      "id": "svcbase",
+      "title": "Notification 11/2017-Central Tax (Rate) dated 28 June 2017, Table of service rates",
+      "url": "https://www.gstcouncil.gov.in/sites/default/files/2024-05/download_4.pdf",
+      "notes": "The base rate table: serial numbers 16, 19-25, 30, 35, 36 quoted below. This is the notification as issued in 2017; later amendments that do not touch an entry leave its rate unchanged."
+    },
+    {
+      "id": "svc2025",
+      "title": "Notification 15/2025-Central Tax (Rate) dated 17 September 2025, effective 22 September 2025",
+      "url": "https://egazette.gov.in/WriteReadData/2025/266220.pdf",
+      "notes": "GST 2.0 services amendment: serial 21(ii) 9% central tax, serial 26 rewritten (job work and tailoring), serial 35 rewritten (beauty 2.5%), serial 12 rewritten (postal, courier, delivery 9%). Gazette G.S.R. 663(E)."
+    },
+    {
+      "id": "svc2026",
+      "title": "Notification 06/2026-Central Tax (Rate) dated 27 October 2026, effective 1 November 2026",
+      "url": "https://egazette.gov.in/WriteReadData/2026/277456.pdf",
+      "notes": "57th GST Council changes: serial 12(iii) delivery services cut from 9% to 2.5% central tax; hotels, restaurants and electric-vehicle transport reworded. Gazette G.S.R. 936(E)."
+    },
+    {
+      "id": "annexure",
+      "title": "Annexure: Scheme of Classification of Services (SAC code descriptions), Notification 11/2017-Central Tax (Rate)",
+      "url": "https://gstcouncil.gov.in/sites/default/files/2024-05/notification11-cgst-annexure.pdf",
+      "notes": "Where every six-digit code and its wording come from. The code identifies the service; the rate comes from the Table above, read at heading level unless an item narrows it."
+    },
+    {
+      "id": "faq56",
+      "title": "FAQs on the decisions of the 56th GST Council, 3 September 2025",
+      "url": "https://gstcouncil.gov.in/sites/default/files/2025-09/faq.pdf",
+      "notes": "Council's own explanation of the 5%/18% structure and of the service entries that changed (Q58-72: transport, job work, hotels, beauty)."
+    }
+  ],
+  "entries": [
+    {
+      "code": "996812",
+      "heading": "9968",
+      "service": "Courier services",
+      "rate": 18,
+      "rate_note": "9% central tax; serial 12(ii) as substituted by 15/2025",
+      "search": ["courier", "parcel", "delivery boy", "shipping", "kuriyar"],
+      "source": "svc2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "code": "996813",
+      "heading": "9968",
+      "service": "Local delivery services, other than postal and courier services",
+      "rate": 18,
+      "rate_note": "9% central tax under serial 12(iii) as substituted by 15/2025; replaced from 1 November 2026 by the 5% entry below",
+      "search": ["delivery", "last mile", "local delivery", "home delivery"],
+      "source": "svc2025",
+      "effective_from": "2025-09-22",
+      "effective_to": "2026-10-31"
+    },
+    {
+      "code": "996813",
+      "heading": "9968",
+      "service": "Delivery services, other than postal and courier services, supplied through an e-commerce operator (or in relation to goods supplied through one)",
+      "rate": 5,
+      "rate_note": "2.5% central tax without input tax credit; serial 12(iii) as substituted by 06/2026",
+      "search": ["delivery", "last mile", "e-commerce delivery", "swiggy", "zomato", "zepto"],
+      "source": "svc2026",
+      "effective_from": "2026-11-01",
+      "effective_to": null
+    },
+    {
+      "code": "997212",
+      "heading": "9972",
+      "service": "Rental or leasing services involving own or leased non-residential property (office, shop or godown rent)",
+      "rate": 18,
+      "rate_note": "9% central tax under serial 16, real estate services; not touched by 15/2025 or 06/2026",
+      "search": [
+        "rent",
+        "shop rent",
+        "office rent",
+        "godown",
+        "kiraya",
+        "lease",
+        "commercial property"
+      ],
+      "source": "svcbase",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "code": "998212",
+      "heading": "9982",
+      "service": "Legal advisory and representation services concerning fields of law other than criminal law",
+      "rate": 18,
+      "rate_note": "9% central tax under serial 20 (legal and accounting services)",
+      "search": [
+        "legal",
+        "lawyer",
+        "advocate",
+        "vakeel",
+        "kanooni",
+        "litigation",
+        "contract drafting"
+      ],
+      "source": "svcbase",
+      "effective_from": "2025-09-22",
+      "effective_to": null,
+      "note": "Services of an advocate or firm of advocates have their own exemption and reverse-charge rules. Check Notification 12/2017-Central Tax (Rate) and 13/2017-Central Tax (Rate) before billing legal work."
+    },
+    {
+      "code": "998213",
+      "heading": "9982",
+      "service": "Legal documentation and certification services concerning patents, copyrights and other intellectual property rights",
+      "rate": 18,
+      "rate_note": "9% central tax under serial 20",
+      "search": [
+        "patent",
+        "trademark filing",
+        "copyright",
+        "IP registration",
+        "legal documentation"
+      ],
+      "source": "svcbase",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "code": "998221",
+      "heading": "9982",
+      "service": "Financial auditing services",
+      "rate": 18,
+      "rate_note": "9% central tax under serial 20",
+      "search": ["audit", "statutory audit", "auditor", "CA", "chartered accountant"],
+      "source": "svcbase",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "code": "998222",
+      "heading": "9982",
+      "service": "Accounting and bookkeeping services",
+      "rate": 18,
+      "rate_note": "9% central tax under serial 20",
+      "search": ["accounting", "bookkeeping", "books", "hisaab", "munim", "data entry", "Tally"],
+      "source": "svcbase",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "code": "998223",
+      "heading": "9982",
+      "service": "Payroll services",
+      "rate": 18,
+      "rate_note": "9% central tax under serial 20",
+      "search": ["payroll", "salary processing", "pagar", "staff salary"],
+      "source": "svcbase",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "code": "998231",
+      "heading": "9982",
+      "service": "Corporate tax consulting and preparation services",
+      "rate": 18,
+      "rate_note": "9% central tax under serial 20",
+      "search": ["tax", "GST return", "income tax", "tax filing", "corporate tax", "kar"],
+      "source": "svcbase",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "code": "998232",
+      "heading": "9982",
+      "service": "Individual tax preparation and planning services",
+      "rate": 18,
+      "rate_note": "9% central tax under serial 20",
+      "search": ["ITR", "income tax return", "personal tax", "tax planning"],
+      "source": "svcbase",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "code": "998311",
+      "heading": "9983",
+      "service": "Management consulting and management services including financial, strategic, human resources, marketing, operations and supply chain management",
+      "rate": 18,
+      "rate_note": "9% central tax under serial 21(ii)",
+      "search": [
+        "consulting",
+        "consultancy",
+        "advisory",
+        "strategy",
+        "management",
+        "salah",
+        "salaah",
+        "HR consulting"
+      ],
+      "source": "svc2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "code": "998312",
+      "heading": "9983",
+      "service": "Business consulting services including public relations services",
+      "rate": 18,
+      "rate_note": "9% central tax under serial 21(ii)",
+      "search": [
+        "business consulting",
+        "PR",
+        "public relations",
+        "image consulting",
+        "startup advice"
+      ],
+      "source": "svc2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "code": "998313",
+      "heading": "9983",
+      "service": "Information technology consulting and support services",
+      "rate": 18,
+      "rate_note": "9% central tax under serial 21(ii)",
+      "search": [
+        "IT",
+        "IT support",
+        "software consulting",
+        "tech support",
+        "helpdesk",
+        "sysadmin",
+        "SaaS support"
+      ],
+      "source": "svc2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "code": "998314",
+      "heading": "9983",
+      "service": "Information technology design and development services (software, apps, websites built to order)",
+      "rate": 18,
+      "rate_note": "9% central tax under serial 21(ii)",
+      "search": [
+        "software",
+        "development",
+        "app",
+        "website",
+        "web development",
+        "coding",
+        "freelance developer",
+        "programming"
+      ],
+      "source": "svc2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "code": "998315",
+      "heading": "9983",
+      "service": "Hosting and information technology infrastructure provisioning services",
+      "rate": 18,
+      "rate_note": "9% central tax under serial 21(ii)",
+      "search": ["hosting", "cloud", "server", "VPS", "infrastructure", "AWS", "domain hosting"],
+      "source": "svc2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "code": "998316",
+      "heading": "9983",
+      "service": "Information technology infrastructure and network management services",
+      "rate": 18,
+      "rate_note": "9% central tax under serial 21(ii)",
+      "search": ["network management", "managed services", "AMC", "network", "server management"],
+      "source": "svc2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "code": "998319",
+      "heading": "9983",
+      "service": "Other information technology services nowhere else classified",
+      "rate": 18,
+      "rate_note": "9% central tax under serial 21(ii)",
+      "search": ["IT services", "data migration", "QA testing", "automation", "other IT"],
+      "source": "svc2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "code": "998321",
+      "heading": "9983",
+      "service": "Architectural advisory services",
+      "rate": 18,
+      "rate_note": "9% central tax under serial 21(ii)",
+      "search": ["architect", "architecture", "building design", "vastu consultant", "naksha"],
+      "source": "svc2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "code": "998331",
+      "heading": "9983",
+      "service": "Engineering advisory services",
+      "rate": 18,
+      "rate_note": "9% central tax under serial 21(ii)",
+      "search": [
+        "engineering",
+        "engineer",
+        "structural design",
+        "technical consultancy",
+        "abhiyantriki"
+      ],
+      "source": "svc2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "code": "998361",
+      "heading": "9983",
+      "service": "Advertising services (creating the advertisement: copy, design, campaign)",
+      "rate": 18,
+      "rate_note": "9% central tax under serial 21(ii); only the print-media space item at serial 21(i) is 2.5%",
+      "search": [
+        "advertising",
+        "ads",
+        "campaign",
+        "ad film",
+        "creative agency",
+        "vigyapan",
+        "marketing"
+      ],
+      "source": "svc2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "code": "998363",
+      "heading": "9983",
+      "service": "Sale of advertising space in print media (except on commission)",
+      "rate": 5,
+      "rate_note": "2.5% central tax under serial 21(i) - the one 5% item in heading 9983",
+      "search": ["newspaper ad", "print media", "ad space", "magazine advertisement", "akhbar"],
+      "source": "svc2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "code": "998365",
+      "heading": "9983",
+      "service": "Sale of internet advertising space (for example Google or Meta ad inventory sold on)",
+      "rate": 18,
+      "rate_note": "9% central tax under serial 21(ii)",
+      "search": ["online ads", "digital advertising", "Google Ads", "Facebook ads", "ad inventory"],
+      "source": "svc2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "code": "998371",
+      "heading": "9983",
+      "service": "Market research services",
+      "rate": 18,
+      "rate_note": "9% central tax under serial 21(ii)",
+      "search": [
+        "market research",
+        "survey",
+        "consumer research",
+        "field survey",
+        "bazaar research"
+      ],
+      "source": "svc2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "code": "998381",
+      "heading": "9983",
+      "service": "Portrait photography services",
+      "rate": 18,
+      "rate_note": "9% central tax under serial 21(ii)",
+      "search": [
+        "photography",
+        "photographer",
+        "portrait",
+        "photo shoot",
+        "tasveer",
+        "passport photo"
+      ],
+      "source": "svc2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "code": "998383",
+      "heading": "9983",
+      "service": "Event photography and event videography services",
+      "rate": 18,
+      "rate_note": "9% central tax under serial 21(ii)",
+      "search": ["wedding photography", "videography", "event video", "shaadi shoot", "drone shoot"],
+      "source": "svc2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "code": "998391",
+      "heading": "9983",
+      "service": "Specialty design services including interior design, fashion design, industrial design and other specialty design services",
+      "rate": 18,
+      "rate_note": "9% central tax under serial 21(ii)",
+      "search": [
+        "design",
+        "designer",
+        "graphic design",
+        "logo",
+        "branding",
+        "interior design",
+        "fashion design",
+        "UI UX",
+        "creatives"
+      ],
+      "source": "svc2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "code": "998392",
+      "heading": "9983",
+      "service": "Design originals (design work delivered as a finished original, for example artwork or a drawing set)",
+      "rate": 18,
+      "rate_note": "9% central tax under serial 21(ii)",
+      "search": ["design original", "artwork", "illustration", "drawing", "mockup"],
+      "source": "svc2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "code": "998395",
+      "heading": "9983",
+      "service": "Translation and interpretation services",
+      "rate": 18,
+      "rate_note": "9% central tax under serial 21(ii)",
+      "search": [
+        "translation",
+        "translator",
+        "interpretation",
+        "anuvad",
+        "localisation",
+        "proofreading"
+      ],
+      "source": "svc2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "code": "998397",
+      "heading": "9983",
+      "service": "Sponsorship services and brand promotion services",
+      "rate": 18,
+      "rate_note": "9% central tax under serial 21(ii)",
+      "search": ["sponsorship", "brand promotion", "influencer", "collab", "brand deal"],
+      "source": "svc2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "code": "998399",
+      "heading": "9983",
+      "service": "Other professional, technical and business services nowhere else classified (for example freelance writing or research reports)",
+      "rate": 18,
+      "rate_note": "9% central tax under serial 21(ii)",
+      "search": [
+        "writing",
+        "content",
+        "copywriting",
+        "research report",
+        "freelance",
+        "professional services",
+        "technical services"
+      ],
+      "source": "svc2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "code": "998511",
+      "heading": "9985",
+      "service": "Executive or retained personnel search services (recruitment)",
+      "rate": 18,
+      "rate_note": "9% central tax under serial 23, support services other than the tour operator and housekeeping items",
+      "search": ["recruitment", "hiring", "headhunting", "placement", "naukri", "staffing"],
+      "source": "svcbase",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "code": "998513",
+      "heading": "9985",
+      "service": "Contract staffing services",
+      "rate": 18,
+      "rate_note": "9% central tax under serial 23",
+      "search": ["staffing", "contract staff", "manpower", "labour supply", "outsourcing staff"],
+      "source": "svcbase",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "code": "998596",
+      "heading": "9985",
+      "service": "Events, exhibitions, conventions and trade shows organisation and assistance services",
+      "rate": 18,
+      "rate_note": "9% central tax under serial 23",
+      "search": [
+        "event management",
+        "exhibition",
+        "conference",
+        "trade show",
+        "wedding planning",
+        "event planner"
+      ],
+      "source": "svcbase",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "code": "998599",
+      "heading": "9985",
+      "service": "Other support services nowhere else classified",
+      "rate": 18,
+      "rate_note": "9% central tax under serial 23",
+      "search": ["support services", "back office", "admin support", "office assistance"],
+      "source": "svcbase",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "code": "998713",
+      "heading": "9987",
+      "service": "Maintenance and repair services of computers and peripheral equipment",
+      "rate": 18,
+      "rate_note": "9% central tax under serial 25",
+      "search": ["computer repair", "laptop repair", "printer repair", "AMC", "IT repair"],
+      "source": "svcbase",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "code": "998822",
+      "heading": "9988",
+      "service": "Wearing apparel manufacturing services - job work on garments owned by someone else (stitching, finishing)",
+      "rate": 5,
+      "rate_note": "2.5% central tax - serial 26(ii)(g) textiles of Chapters 50 to 63; tailoring as such is serial 26(vi), also 2.5%",
+      "search": ["tailoring", "stitching", "silai", "garment job work", "darzi", "job work"],
+      "source": "svc2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "code": "999293",
+      "heading": "9992",
+      "service": "Commercial training and coaching services (for example software, spoken English or exam coaching run as a business)",
+      "rate": 18,
+      "rate_note": "9% central tax under serial 30; teaching by a recognised school or college is dealt with separately in Notification 12/2017-Central Tax (Rate)",
+      "search": [
+        "training",
+        "coaching",
+        "classes",
+        "tuition",
+        "course",
+        "workshop",
+        "padhai",
+        "sikhana"
+      ],
+      "source": "svcbase",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "code": "999294",
+      "heading": "9992",
+      "service": "Other education and training services nowhere else classified",
+      "rate": 18,
+      "rate_note": "9% central tax under serial 30",
+      "search": ["education", "teaching", "mentoring", "online course", "curriculum"],
+      "source": "svcbase",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "code": "999799",
+      "heading": "9997",
+      "service": "Other services nowhere else classified (the residuary service entry)",
+      "rate": 18,
+      "rate_note": "9% central tax under serial 35(ii); only beauty and physical well-being services (group 99972) are 2.5%",
+      "search": ["miscellaneous services", "other services", "residuary", "any other service"],
+      "source": "svc2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    }
+  ]
+}

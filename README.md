@@ -53,7 +53,9 @@ Re-run `setup.mjs` too if you move the workspace to another computer (it records
 | [rent-receipt](rent-receipt/) | Rent receipts for an HRA claim, one per month, with the landlord's PAN and a revenue stamp box on cash months (A4 PDF) | `misc-tools-rent-receipt` |
 
 To use a tool by hand, open its `index.html` in a browser, fill in the form and click **Download PDF**.
-Helpers: `node shared/check.mjs gstin <GSTIN>` checks Indian IDs; `node shared/rules.mjs` lists the rule files.
+Helpers: `node shared/check.mjs gstin <GSTIN>` checks Indian IDs; `node shared/lookup.mjs sac consulting`
+(or `hsn 0902`) finds a SAC/HSN code and its GST rate with the official notification to confirm; `node shared/rules.mjs`
+lists the rule files.
 
 ## Trust, but verify
 Tax rates and codes change. Rule files in [`rules/`](rules/) carry the official link for every value and the
