@@ -82,7 +82,7 @@
       "source": "ka-faq"
     },
     {
-      "state": "Tamil Nadu",
+      "state": "Tamil Nadu (Chennai)",
       "basis": "half_yearly",
       "slabs": [
         { "upto": 21000, "amount": 0 },
@@ -95,7 +95,8 @@
       "deduct_in_months": [1, 8],
       "annual_cap": 2500,
       "source": "tn-gcc",
-      "notes": "Levied by the urban local body, not the state: these are the Greater Chennai Corporation slabs. Another corporation or municipality may differ."
+      "notes": "Greater Chennai Corporation slabs; other local bodies in Tamil Nadu set their own.",
+      "detail": "Professional tax is levied by the urban local body, not the state, so these rates apply only to an employee working within the Greater Chennai Corporation limits. Every other corporation and municipality in Tamil Nadu sets its own schedule, which is why this entry is filed under the local body and not under \"Tamil Nadu\"."
     },
     {
       "state": "Telangana",
@@ -138,6 +139,11 @@
       "state": "West Bengal",
       "reason": "The only schedule found is a proposed substitution published on 18-08-2026 for objections (source wb-proposal); the schedule in force for 2026-27 could not be confirmed on comtax.wb.gov.in.",
       "do": "Pass professionalTax as a number, checked against the West Bengal Commercial Taxes Department page, instead of using autoDeductions."
+    },
+    {
+      "state": "Tamil Nadu, outside the Greater Chennai Corporation area",
+      "reason": "Professional tax in Tamil Nadu is levied by each urban local body under the Tamil Nadu Urban Local Bodies Act, 1998, and the schedules differ. Only the Greater Chennai Corporation schedule could be confirmed.",
+      "do": "Pass professionalTax as a number taken from the local body's schedule, or add that local body to this file after checking its own notification."
     },
     {
       "state": "Every other state and union territory",

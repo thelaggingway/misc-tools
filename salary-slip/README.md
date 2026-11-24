@@ -33,7 +33,7 @@ and ceiling it used:
 |---|---|---|
 | PF (employee) | `rules/pf-esi.json` | 12% of basic + DA, capped at the wage ceiling (₹15,000 to 16 Sep 2026, ₹25,000 from 17 Sep 2026; a month that spans the change is split by days) |
 | ESI (employee) | `rules/pf-esi.json` | 0.75% of gross wages, only up to the ₹21,000 ceiling (₹25,000 for a person with disability) |
-| Professional tax | `rules/professional-tax.json` | the state's slabs: Maharashtra, Karnataka, Tamil Nadu, Telangana, Gujarat, Madhya Pradesh |
+| Professional tax | `rules/professional-tax.json` | the state's slabs: Maharashtra, Karnataka, Telangana, Gujarat, Madhya Pradesh, and Tamil Nadu (Chennai) — in Tamil Nadu each urban local body sets its own, so only the Greater Chennai Corporation schedule is filed, under the state name `Tamil Nadu (Chennai)` |
 
 Without `autoDeductions`, PF, ESI and professional tax are taken exactly as given — use that when the
 establishment is not covered, when the employee is outside a scheme, or for a state whose schedule is not in
