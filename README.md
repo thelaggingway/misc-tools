@@ -12,4 +12,9 @@ Both use the same template, so a PDF from the CLI looks exactly like one from th
 |---|---|
 | [invoice-generator](invoice-generator/) | A4 invoice PDF with GST options and amount in words (lakh/crore) |
 
-Keep personal details (addresses, bank accounts) in `private/` or `*.local.json`; both are gitignored.
+## Personal data lives elsewhere
+This repo is public and holds only tools, templates and made-up examples. Real profiles (addresses, bank
+details, clients), per-document JSON and generated PDFs live in the private companion repo
+[thelaggingway/misc-tools-private](https://github.com/thelaggingway/misc-tools-private) (owner access only).
+Clone both side by side and run tools from the private repo, e.g.
+`node ../misc-tools/invoice-generator/cli.mjs profiles/<profile>.json invoices/<client>/<no>.json -o ...`.
