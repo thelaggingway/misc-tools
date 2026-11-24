@@ -1,0 +1,75 @@
+{
+  "name": "pf-esi",
+  "description": "Employees' Provident Fund and Employees' State Insurance contribution rates, wage ceilings and wage basis, for a monthly wage slip. The PF wage ceiling rose from ₹15,000 to ₹25,000 on 17 September 2026, so a September 2026 payslip is split by days across the two ceilings.",
+  "coverage": { "from": "2026-04-01", "to": "2027-03-31" },
+  "checked_on": "2026-11-24",
+  "sources": [
+    {
+      "id": "epfo-faq",
+      "title": "EPFO FAQ, question 119: contribution rate payable for a member",
+      "url": "https://www.epfindia.gov.in/site_en/FAQ.php",
+      "notes": "Employee contributes 12% of basic wages + dearness allowance + retaining allowance; the employer also pays 12%, of which 8.33% goes to the Pension Fund (EPS) and 3.67% to the Provident Fund (EPF)."
+    },
+    {
+      "id": "so5109",
+      "title": "S.O. 5109(E), Ministry of Labour and Employment, 17 September 2026",
+      "url": "https://egazette.gov.in/WriteReadData/2026/276299.pdf",
+      "notes": "Notifies ₹25,000 per month as the wage ceiling for Chapter III of the Code on Social Security, 2020, with effect from publication in the Gazette (17-09-2026), in supersession of S.O. 2702(E) dated 29-05-2026."
+    },
+    {
+      "id": "epfo-ceiling-faq",
+      "title": "EPFO FAQs: Revision of EPFO statutory wage ceiling (₹15,000 to ₹25,000)",
+      "url": "https://pmvbry.epfindia.gov.in/wp-content/uploads/2026/09/EPFO_Wage_Ceiling_FAQs.pdf",
+      "notes": "Confirms the earlier ceiling was ₹15,000 and the revised ceiling ₹25,000 from 17-09-2026, and that September 2026 contributions are calculated separately for 01-16 September and 17-30 September."
+    },
+    {
+      "id": "esic-contribution",
+      "title": "ESIC: Contribution",
+      "url": "https://esic.gov.in/contribution",
+      "notes": "Employee's contribution 0.75% and employer's 3.25% of wages, with effect from 01-07-2019."
+    },
+    {
+      "id": "esic-standard-note",
+      "title": "ESIC Standard Note on the Employees' State Insurance Scheme (as on 01-01-2025)",
+      "url": "https://esic.gov.in/attachments/publicationfile/Standard_Note_on_Employees_State_Insurance_Scheme_as_on_01_01_2025_English_1757940841.pdf",
+      "notes": "Employees drawing wages up to ₹21,000 per month (₹25,000 for persons with disability) are covered; the 0.75% / 3.25% split replaced 1.75% / 4.75% from 01-07-2019."
+    }
+  ],
+  "entries": [
+    {
+      "scheme": "epf",
+      "employee_rate": 12,
+      "employer_rate": 12,
+      "employer_eps_rate": 8.33,
+      "employer_epf_rate": 3.67,
+      "wage_basis": "basic + DA",
+      "wage_ceiling": 15000,
+      "effective_from": "2014-09-01",
+      "effective_to": "2026-09-16",
+      "source": "epfo-faq"
+    },
+    {
+      "scheme": "epf",
+      "employee_rate": 12,
+      "employer_rate": 12,
+      "employer_eps_rate": 8.33,
+      "employer_epf_rate": 3.67,
+      "wage_basis": "basic + DA",
+      "wage_ceiling": 25000,
+      "effective_from": "2026-09-17",
+      "effective_to": null,
+      "source": "so5109"
+    },
+    {
+      "scheme": "esi",
+      "employee_rate": 0.75,
+      "employer_rate": 3.25,
+      "wage_basis": "gross wages",
+      "wage_ceiling": 21000,
+      "wage_ceiling_disability": 25000,
+      "effective_from": "2019-07-01",
+      "effective_to": null,
+      "source": "esic-contribution"
+    }
+  ]
+}

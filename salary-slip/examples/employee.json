@@ -1,0 +1,13 @@
+{
+  "employeeName": "Rohan Mehta",
+  "employeeGuardian": "Sunita Mehta",
+  "designation": "Data Analyst",
+  "employeeCode": "EMP-07",
+  "department": "Analytics",
+  "uan": "101234567890",
+  "pan": "AKJPR4821M",
+  "bankAccount": "000000000000",
+  "ifsc": "HDFC0000000",
+  "state": "Karnataka",
+  "gender": "male"
+}

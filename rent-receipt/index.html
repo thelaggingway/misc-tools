@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rent Receipt</title>
+<style>
+  :root { --navy:#1e293b; --violet:#4f46e5; --gray:#475569; --muted:#94a3b8; --line:#e2e8f0; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: "Inter","Segoe UI",Helvetica,Arial,sans-serif; background:#f1f5f9; color:var(--gray); }
+  .app { display:grid; grid-template-columns: 420px 1fr; min-height:100vh; }
+  /* ---------- form ---------- */
+  .form { background:#fff; border-right:1px solid var(--line); padding:18px 20px 40px; overflow-y:auto; height:100vh; position:sticky; top:0; }
+  .form h1 { font-size:18px; color:var(--navy); margin:0 0 4px; }
+  .form h2 { font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:var(--violet); margin:20px 0 8px; }
+  .form label { display:block; font-size:12px; margin:8px 0 3px; color:var(--gray); }
+  .form input, .form textarea, .form select { width:100%; padding:7px 9px; border:1px solid #cbd5e1; border-radius:6px; font:inherit; font-size:13px; color:var(--navy); }
+  .form textarea { resize:vertical; min-height:56px; }
+  .row { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .btn { display:inline-block; padding:8px 12px; border-radius:6px; border:1px solid #cbd5e1; background:#fff; cursor:pointer; font:inherit; font-size:13px; color:var(--navy); }
+  .btn.primary { background:var(--violet); border-color:var(--violet); color:#fff; font-weight:600; }
+  .actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:6px; }
+  .hint { font-size:11px; color:var(--muted); margin-top:4px; }
+  .hint.warn { color:#b45309; }
+  /* ---------- receipt pages ---------- */
+  .preview { padding:30px; display:flex; flex-direction:column; align-items:center; gap:24px; }
+  .page { width:210mm; min-height:297mm; background:#fff; box-shadow:0 4px 24px rgba(15,23,42,.12); padding:16mm 18mm 12mm; display:flex; flex-direction:column; }
+  .receipt { display:flex; flex-direction:column; border:1px solid var(--line); border-radius:8px; padding:7mm 8mm; margin-bottom:6mm; }
+  .receipt:last-of-type { margin-bottom:0; }
+  .rhead { display:flex; justify-content:space-between; align-items:baseline; border-bottom:1px solid var(--line); padding-bottom:5px; }
+  .rhead .t { font-size:11pt; font-weight:700; letter-spacing:.1em; color:var(--violet); }
+  .rhead .d { font-size:9pt; color:var(--muted); }
+  .rbody { display:grid; grid-template-columns:1fr 40mm; gap:9mm; margin-top:9px; flex:1; }
+  .rtext { font-size:10pt; line-height:1.65; color:var(--gray); }
+  .rtext b { color:var(--navy); font-weight:600; }
+  .rtext .addr { color:var(--navy); }
+  .rmeta { margin-top:8px; font-size:8.5pt; color:var(--muted); }
+  .rmeta b { color:var(--gray); font-weight:600; }
+  .rnote { margin-top:6px; font-size:8pt; color:var(--muted); font-style:italic; }
+  .rside { display:flex; flex-direction:column; justify-content:flex-end; align-items:flex-end; }
+  .stamp { width:36mm; height:24mm; margin-bottom:auto; border:1.5px dashed #b45309; color:#b45309; border-radius:2px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;
+    font-size:6.5pt; letter-spacing:.08em; line-height:1.5; padding:2mm; }
+  .stamp span { font-size:6pt; letter-spacing:.02em; opacity:.85; }
+  .rsig { text-align:right; }
+  .rsig .place { font-size:8.5pt; color:var(--muted); margin-bottom:2px; }
+  .rsig .line { width:36mm; border-top:1.5px solid var(--navy); margin:16px 0 3px; }
+  .rsig .who { font-weight:700; color:var(--navy); font-size:9.5pt; }
+  .rsig .role { font-size:7.5pt; color:var(--muted); }
+  .pfoot { display:flex; justify-content:space-between; border-top:1px solid var(--line); margin-top:auto; padding-top:5px; font-size:7.5pt; color:var(--muted); }
+  @page { size:A4; margin:0; }
+  @media print {
+    body { background:#fff; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    .app { display:block; } .form { display:none; } .preview { padding:0; display:block; }
+    .page { box-shadow:none; width:210mm; height:297mm; overflow:hidden; page-break-after:always; }
+    .page:last-child { page-break-after:auto; }
+  }
+  @media (max-width:1100px) { .app { grid-template-columns:1fr; } .form { height:auto; position:static; } .preview { overflow-x:auto; align-items:flex-start; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <form class="form" id="f" onsubmit="return false">
+    <h1>Rent Receipt</h1>
+    <div class="hint">One receipt per month, three to a page. Edits save automatically in this browser. “Download PDF” opens the print dialog — choose “Save as PDF”.</div>
+    <div class="actions" style="margin-top:12px">
+      <button class="btn primary" type="button" onclick="downloadPdf()">Download PDF</button>
+      <button class="btn" type="button" onclick="exportJson()">Export JSON</button>
+      <label class="btn" style="margin:0">Import JSON<input type="file" accept=".json" hidden onchange="importJson(this)"></label>
+      <button class="btn" type="button" onclick="resetDefaults()">Reset</button>
+    </div>
+
+    <h2>Landlord</h2>
+    <label>Name</label><input data-k="landlordName">
+    <label>Address</label><input data-k="landlordAddress">
+    <label>PAN (needed above the annual rent threshold)</label><input data-k="landlordPan" placeholder="ABCPE1234F">
+
+    <h2>Tenant</h2>
+    <label>Name</label><input data-k="tenantName">
+    <label>Address (one line per row)</label><textarea data-k="tenantAddress" rows="3"></textarea>
+
+    <h2>Premises and rent</h2>
+    <label>Address of the rented premises (one line per row)</label><textarea data-k="propertyAddress" rows="3"></textarea>
+    <label>Monthly rent (₹)</label><input type="number" step="any" data-k="rent">
+
+    <h2>Months</h2>
+    <div class="row">
+      <div><label>From</label><input type="month" data-k="from"></div>
+      <div><label>To</label><input type="month" data-k="to"></div>
+    </div>
+    <div class="hint">One receipt for every month in the range, dated its last day. To skip months, import a JSON file with a <code>months</code> list instead.</div>
+
+    <h2>Payment</h2>
+    <div class="row">
+      <div><label>Mode</label><input data-k="paymentMode" list="modes" placeholder="Cash"></div>
+      <div><label>Reference (UTR, cheque no.)</label><input data-k="paymentRef"></div>
+    </div>
+    <datalist id="modes">
+      <option value="Cash"><option value="UPI"><option value="NEFT"><option value="IMPS"><option value="Cheque">
+    </datalist>
+
+    <h2>Signing</h2>
+    <div class="row">
+      <div><label>Place</label><input data-k="place"></div>
+      <div><label>Signatory name</label><input data-k="signName" placeholder="defaults to the landlord"></div>
+    </div>
+    <label>Note at the foot of each receipt</label><textarea data-k="notes" rows="2" placeholder="e.g. Rent for April 2026 received in advance"></textarea>
+  </form>
+
+  <div class="preview" id="preview"></div>
+</div>
+
+<script src="../shared/india.js"></script>
+<script src="../shared/payroll.js"></script>
+<script>
+const DEFAULTS = {
+  landlordName: "Landlord Name",
+  landlordAddress: "Street, City, State PIN",
+  landlordPan: "",
+  tenantName: "Tenant Name",
+  tenantAddress: "",
+  propertyAddress: "Flat, Building, Street\nCity, State PIN",
+  rent: 0,
+  months: [],
+  from: new Date().toISOString().slice(0, 7),
+  to: new Date().toISOString().slice(0, 7),
+  paymentMode: "UPI",
+  paymentRef: "",
+  place: "",
+  notes: "",
+  signName: "",
+};
+const PER_PAGE = 3;
+const KEY = "rent-receipt-v1";
+let S = load();
+let RULES = null;   // rules/hra-rent.json, when the page is served over http
+
+function load() {
+  if (window.RENT_DATA) return { ...structuredClone(DEFAULTS), ...window.RENT_DATA };
+  try { return { ...structuredClone(DEFAULTS), ...JSON.parse(localStorage.getItem(KEY)) }; } catch { return structuredClone(DEFAULTS); }
+}
+function save() { localStorage.setItem(KEY, JSON.stringify(S)); }
+
+fetchRules({ rent: "../rules/hra-rent.json" })
+  .then(r => { if (r.rent) { RULES = r.rent; render(); } });
+
+const oneLine = s => String(s || "").split("\n").map(x => x.trim()).filter(Boolean).join(", ");
+const isCash = () => /cash/i.test(S.paymentMode || "");
+
+function months() {
+  if ((S.months || []).length) return S.months;
+  try { return S.from && S.to ? monthsBetween(S.from, S.to) : []; } catch { return []; }
+}
+
+// Whether this receipt carries a revenue stamp. The CLI works it out from rules/hra-rent.json and
+// passes the answer in; in the browser it is worked out here when the rules can be read, and a cash
+// receipt gets the box either way, because a stamp that is not needed costs a rupee and a missing one
+// spoils the receipt.
+function stampOn() {
+  if (S.stampRequired !== undefined) return S.stampRequired;
+  const rent = Number(S.rent) || 0;
+  if (RULES) {
+    const e = (RULES.entries || []).find(x => x.kind === "revenue_stamp");
+    return isCash() && !!e && rent > Number(e.threshold);
+  }
+  return isCash();
+}
+
+function render() {
+  const list = months();
+  const stamp = stampOn();
+  const pages = [];
+  for (let i = 0; i < list.length; i += PER_PAGE) pages.push(list.slice(i, i + PER_PAGE));
+  const rent = Number(S.rent) || 0;
+
+  document.getElementById("preview").innerHTML = pages.length ? pages.map((group, p) => `
+    <div class="page">
+      ${group.map(m => receipt(m, stamp, rent)).join("")}
+      <div class="pfoot">
+        <span>Rent receipts · ${esc(S.tenantName)} · ${list[0] === list[list.length - 1] ? esc(monthShort(list[0])) : `${esc(monthShort(list[0]))} to ${esc(monthShort(list[list.length - 1]))}`}</span>
+        <span>Page ${p + 1} of ${pages.length}</span>
+      </div>
+    </div>`).join("")
+    : `<div class="page"><div class="receipt"><div class="rtext">Choose a month, or a from and to range, to see the receipts.</div></div></div>`;
+
+  const old = document.getElementById("rulesHint");
+  if (old) old.remove();
+  let warn = "";
+  if (!list.length) warn = "No months chosen yet.";
+  else if (RULES && !S.landlordPan) {
+    const e = (RULES.entries || []).find(x => x.kind === "landlord_pan");
+    if (e && rent * 12 > Number(e.threshold))
+      warn = `The rent comes to ${inr(rent * 12)} a year, above ${inr(e.threshold)}: the landlord's PAN is required (${e.form}).`;
+  }
+  if (!warn && !RULES) warn = "Could not read rules/ here: the landlord's PAN threshold and the revenue stamp rule were not checked. The CLI does check them.";
+  if (warn) {
+    const d = document.createElement("div");
+    d.id = "rulesHint"; d.className = "hint warn"; d.textContent = warn;
+    document.querySelector(".form").appendChild(d);
+  }
+}
+
+function receipt(m, stamp, rent) {
+  const pay = S.paymentMode
+    ? `paid by <b>${esc(S.paymentMode)}</b>${S.paymentRef ? ` (ref ${esc(S.paymentRef)})` : ""}`
+    : "paid";
+  return `
+    <div class="receipt">
+      <div class="rhead"><div class="t">RENT RECEIPT</div><div class="d">${esc(fmtDate(monthEnd(m)))}</div></div>
+      <div class="rbody">
+        <div>
+          <div class="rtext">Received with thanks from <b>${esc(S.tenantName)}</b>${S.tenantAddress ? `, <span class="addr">${esc(oneLine(S.tenantAddress))}</span>` : ""},
+            the sum of <b>${inr(rent)}</b> (<i>${amountWords(rent)}</i>) towards rent for the month of
+            <b>${esc(monthLabel(m))}</b> for the premises at <b>${esc(oneLine(S.propertyAddress))}</b>, ${pay}.</div>
+          <div class="rmeta">
+            ${S.landlordPan ? `<b>Landlord PAN:</b> ${esc(S.landlordPan)} · ` : ""}
+            <b>Landlord:</b> ${esc(S.landlordName)}
+          </div>
+          ${S.notes ? `<div class="rnote">${esc(S.notes)}</div>` : ""}
+        </div>
+        <div class="rside">
+          ${stamp ? `<div class="stamp">REVENUE STAMP<span>affix and sign across</span></div>` : ""}
+          <div class="rsig">
+            ${S.place ? `<div class="place">${esc(S.place)}</div>` : ""}
+            <div class="line"></div>
+            <div class="who">${esc(S.signName || S.landlordName)}</div>
+            <div class="role">Landlord</div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function fillForm() {
+  document.querySelectorAll("[data-k]").forEach(el => el.type === "checkbox" ? el.checked = !!S[el.dataset.k] : el.value = S[el.dataset.k] ?? "");
+}
+function onEdit(e) {
+  const el = e.target;
+  if (!el.dataset.k) return;
+  S[el.dataset.k] = el.type === "checkbox" ? el.checked : el.value;
+  if (el.dataset.k === "rent" || el.dataset.k === "paymentMode") delete S.stampRequired; // let the tool decide again
+  save(); render();
+}
+for (const ev of ["input", "change"]) document.getElementById("f").addEventListener(ev, onEdit);
+
+function downloadPdf() {
+  const old = document.title;
+  document.title = "rent-receipt-" + (S.tenantName || "tenant").replace(/\s+/g, "-").toLowerCase();
+  window.print(); document.title = old;
+}
+function exportJson() {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(S, null, 2)], { type: "application/json" }));
+  a.download = "rent-receipt-" + (S.tenantName || "tenant").replace(/\s+/g, "-").toLowerCase() + ".json"; a.click();
+}
+function importJson(inp) {
+  const f = inp.files[0]; if (!f) return;
+  f.text().then(t => { S = { ...structuredClone(DEFAULTS), ...JSON.parse(t) }; save(); fillForm(); render(); });
+  inp.value = "";
+}
+function resetDefaults() { if (confirm("Reset all fields to the defaults?")) { S = structuredClone(DEFAULTS); save(); fillForm(); render(); } }
+
+fillForm(); render();
+</script>
+</body>
+</html>

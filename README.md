@@ -48,6 +48,8 @@ Re-run `setup.mjs` too if you move the workspace to another computer (it records
 |---|---|---|
 | [invoice-generator](invoice-generator/) | Invoice, proforma, quotation, payment receipt, credit note, debit note (A4 PDF, GST, amount in words, UPI QR) | `misc-tools-invoices` |
 | (intake) | Client and profile files from a screenshot or text, with GSTIN/PAN/IFSC/PIN checks | `misc-tools-client-intake` |
+| [salary-slip](salary-slip/) | Monthly wage slip: days paid, earnings, PF/ESI/professional tax from the dated rules, net in words (A4 PDF) | `misc-tools-salary-slip` |
+| [rent-receipt](rent-receipt/) | Rent receipts for an HRA claim, one per month, with the landlord's PAN and a revenue stamp box on cash months (A4 PDF) | `misc-tools-rent-receipt` |
 
 To use a tool by hand, open its `index.html` in a browser, fill in the form and click **Download PDF**.
 Helpers: `node shared/check.mjs gstin <GSTIN>` checks Indian IDs; `node shared/rules.mjs` lists the rule files.

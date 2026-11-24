@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Rent receipt input",
+  "description": "One receipt per month, laid out three to an A4 page. Every field is optional except the ones a receipt needs; files passed to the CLI merge left to right (landlord file, tenant file, the months).",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "landlordName": { "type": "string", "description": "Name of the person or firm receiving the rent" },
+    "landlordAddress": { "type": "string", "description": "Landlord's address on one line" },
+    "landlordPan": { "type": "string", "pattern": "^$|^[A-Z]{3}[ABCFGHJLPT][A-Z][0-9]{4}[A-Z]$", "description": "Landlord's PAN; required when the rent for the year is above the threshold in rules/hra-rent.json, and format-checked" },
+    "tenantName": { "type": "string", "description": "Tenant's name, as it should appear in the HRA claim" },
+    "tenantAddress": { "type": "string", "description": "Tenant's address, lines separated by \\n" },
+    "propertyAddress": { "type": "string", "description": "Address of the rented premises, lines separated by \\n" },
+    "rent": { "type": ["number", "string"], "pattern": "^\\d+(\\.\\d+)?$", "description": "Monthly rent in rupees" },
+    "months": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^\\d{4}-(0[1-9]|1[0-2])$" },
+      "description": "Months to make receipts for, each as YYYY-MM; one receipt per month"
+    },
+    "from": { "type": "string", "pattern": "^$|^\\d{4}-(0[1-9]|1[0-2])$", "description": "First month of a range, YYYY-MM; used when months is empty" },
+    "to": { "type": "string", "pattern": "^$|^\\d{4}-(0[1-9]|1[0-2])$", "description": "Last month of a range, YYYY-MM; used when months is empty" },
+    "paymentMode": { "type": "string", "description": "How the rent was paid, e.g. Cash, UPI, NEFT, cheque; a cash receipt shows a revenue stamp box" },
+    "paymentRef": { "type": "string", "description": "Payment reference: UPI/NEFT reference (UTR) or cheque number" },
+    "place": { "type": "string", "description": "Place where the landlord signs, e.g. Bengaluru" },
+    "notes": { "type": "string", "description": "Free text printed at the foot of every receipt" },
+    "signName": { "type": "string", "description": "Name under the signature; defaults to the landlord's name" },
+    "stampRequired": { "type": "boolean", "description": "Whether the receipt needs a revenue stamp; set by the tool from rules/hra-rent.json" }
+  }
+}
