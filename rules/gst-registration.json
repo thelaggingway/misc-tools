@@ -1,0 +1,127 @@
+{
+  "name": "gst-registration",
+  "description": "When a supplier must register under GST: the turnover limits in CGST Act section 22 and its notifications, compulsory registration for inter-State supplies (section 24(i)), the exemption for small suppliers of inter-State services, and the rule that an export is an inter-State supply. Turnover limits are on aggregate turnover in a financial year, which includes exports.",
+  "coverage": {
+    "from": "2026-04-01",
+    "to": "2027-03-31"
+  },
+  "checked_on": "2026-11-24",
+  "sources": [
+    {
+      "id": "cgst-s22",
+      "title": "CGST Act, 2017, section 22 (persons liable for registration), as amended",
+      "url": "https://taxinformation.cbic.gov.in/content/html/tax_repository/gst/acts/2017_CGST_act/active/chapter6/section22_v1.00.html",
+      "notes": "₹20 lakh; ₹10 lakh from special category States (first proviso); Explanation (iii): special category States are those in article 279A(4)(g) except Jammu and Kashmir, Arunachal Pradesh, Assam, Himachal Pradesh, Meghalaya, Sikkim and Uttarakhand, which leaves Manipur, Mizoram, Nagaland and Tripura."
+    },
+    {
+      "id": "cgst-s24",
+      "title": "CGST Act, 2017, section 24 (compulsory registration in certain cases)",
+      "url": "https://taxinformation.cbic.gov.in/content/html/tax_repository/gst/acts/2017_CGST_act/active/chapter6/section24_v1.00.html",
+      "notes": "Clause (i): persons making any inter-State taxable supply must register notwithstanding section 22(1)."
+    },
+    {
+      "id": "cgst-s2-6",
+      "title": "CGST Act, 2017, section 2(6) (aggregate turnover)",
+      "url": "https://taxinformation.cbic.gov.in/content/html/tax_repository/gst/acts/2017_CGST_act/active/chapter1/section2_v1.00.html",
+      "notes": "Aggregate value of taxable supplies, exempt supplies, exports of goods or services and inter-State supplies of persons with the same PAN, on an all-India basis, excluding the taxes."
+    },
+    {
+      "id": "igst-s7-5",
+      "title": "IGST Act, 2017, section 7(5) (inter-State supply)",
+      "url": "https://taxinformation.cbic.gov.in/content/html/tax_repository/gst/acts/2017_IGST_Act/active/chapteriv/section7_v1.00.html",
+      "notes": "A supply where the supplier is in India and the place of supply is outside India is an inter-State supply. So an export of services falls under section 24(i) unless an exemption applies."
+    },
+    {
+      "id": "n10-2017-it",
+      "title": "Notification 10/2017-Integrated Tax, 13 October 2017",
+      "url": "https://cbic-gst.gov.in/hindi/pdf/integrated-tax/10_2017_IT.pdf",
+      "notes": "Exempts persons making inter-State supplies of taxable services from registration if their aggregate turnover, on an all-India basis, does not exceed ₹20 lakh in a financial year; ₹10 lakh for special category States (proviso)."
+    },
+    {
+      "id": "n10-2019-ct",
+      "title": "Notification 10/2019-Central Tax, 7 March 2019 (in force 1 April 2019)",
+      "url": "https://gstcouncil.gov.in/sites/default/files/2024-05/notfctn-10-central-tax-english-2019.pdf",
+      "notes": "Exempts persons engaged exclusively in the supply of goods with aggregate turnover up to ₹40 lakh, except persons who must register under section 24, suppliers of ice cream, pan masala and tobacco (2105 00 00, 2106 90 20, chapter 24), persons making intra-State supplies in Arunachal Pradesh, Manipur, Meghalaya, Mizoram, Nagaland, Puducherry, Sikkim, Telangana, Tripura and Uttarakhand, and persons who opt to register voluntarily."
+    },
+    {
+      "id": "council-57",
+      "title": "Recommendations of the 57th GST Council meeting, 8 October 2026 (PIB press release)",
+      "url": "https://www.gstcouncil.gov.in/sites/default/files/2026-10/press_release.pdf",
+      "notes": "Checked for changes to the registration limits: none recommended. It recommends export-of-services and registration process reforms that do not change who must register."
+    }
+  ],
+  "entries": [
+    {
+      "id": "services_limit",
+      "rule": "Supplier of services, or of goods and services: must register when aggregate turnover in the financial year exceeds this limit.",
+      "limit": 2000000,
+      "states": "all except the special category States",
+      "source": "cgst-s22"
+    },
+    {
+      "id": "services_limit_special",
+      "rule": "Same, for a supplier in a special category State.",
+      "limit": 1000000,
+      "states": [
+        "Manipur",
+        "Mizoram",
+        "Nagaland",
+        "Tripura"
+      ],
+      "source": "cgst-s22"
+    },
+    {
+      "id": "interstate_compulsory",
+      "rule": "A person making any inter-State taxable supply must register whatever the turnover, unless an exemption notification applies.",
+      "source": "cgst-s24"
+    },
+    {
+      "id": "export_is_interstate",
+      "rule": "A supply by a supplier in India with place of supply outside India (an export) is an inter-State supply.",
+      "source": "igst-s7-5"
+    },
+    {
+      "id": "interstate_services_exemption",
+      "rule": "Persons making inter-State supplies of taxable services are exempt from registration while aggregate turnover, all-India, does not exceed this limit; a lower limit applies in special category States.",
+      "limit": 2000000,
+      "limit_special": 1000000,
+      "source": "n10-2017-it",
+      "unverified": true,
+      "note": "limit and limit_special are from the official 2017 text. Which States get the lower limit was changed by Notification 3/2019-Integrated Tax (listed on https://cbic-gst.gov.in/hindi/integrated-tax.html), whose official text could not be opened on 2026-11-24; for a supplier in a north-eastern or hill State, confirm with a CA."
+    },
+    {
+      "id": "aggregate_turnover_includes_exports",
+      "rule": "Aggregate turnover counts exports, exempt supplies and inter-State supplies, all-India, excluding GST.",
+      "source": "cgst-s2-6"
+    },
+    {
+      "id": "goods_only_limit",
+      "rule": "Supplier exclusively of goods: exempt up to this limit, except the listed goods, persons covered by section 24, and intra-State suppliers in the listed States (who fall back to section 22's limits).",
+      "limit": 4000000,
+      "excluded_goods": [
+        "2105 00 00 ice cream and edible ice",
+        "2106 90 20 pan masala",
+        "chapter 24 tobacco"
+      ],
+      "excluded_states": [
+        "Arunachal Pradesh",
+        "Manipur",
+        "Meghalaya",
+        "Mizoram",
+        "Nagaland",
+        "Puducherry",
+        "Sikkim",
+        "Telangana",
+        "Tripura",
+        "Uttarakhand"
+      ],
+      "source": "n10-2019-ct"
+    }
+  ],
+  "not_covered": [
+    "Which States get the ₹10 lakh limit in the inter-State services exemption after Notification 3/2019-Integrated Tax (official text not opened).",
+    "Inter-State supplies of goods by small suppliers: no general exemption was verified here, so section 24(i) is shown as applying; check special exemptions (for example handicraft goods) with a CA.",
+    "Goods suppliers in Manipur, Mizoram, Nagaland and Tripura: whether a notification under section 22's second proviso raised their ₹10 lakh limit was not verified.",
+    "The other categories in section 24 (reverse charge, e-commerce sellers, agents, casual and non-resident taxable persons, TDS deductors, input service distributors)."
+  ]
+}

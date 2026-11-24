@@ -36,11 +36,14 @@ in the document, item rates in that currency, plus `exchangeRate` (rupees per un
 `exchangeRateDate` (always required: the rupee value matters for FEMA and income tax even without GST).
 
 **Owner not GST-registered** (no `fromGstin` in the profile): leave out `exportMode` and `lut`; the tool prints a
-plain INVOICE without the Rule 46 endorsement, LUT or IGST, and rejects those fields. This tool does not decide
-whether the owner must register for GST: that depends on their turnover and the kind of supply, and this repo has
-no verified rule file for it yet. Make the invoice they ask for, and if they have not already confirmed it, suggest
-they check with their chartered accountant whether exporting requires them to register. Do not state a
-registration limit or exemption from memory.
+plain INVOICE without the Rule 46 endorsement, LUT or IGST, and rejects those fields. Whether the owner must register
+is in `rules/gst-registration.json` (each entry cites the Act section or notification; open it before relying on
+it). In short: an export is an inter-State supply (IGST Act s.7(5)), and inter-State suppliers must register
+(CGST Act s.24(i)), but suppliers of inter-State *services* are exempt while aggregate turnover, which counts
+exports, stays within the limit in Notification 10/2017-Integrated Tax (`interstate_services_exemption`). If the
+owner's turnover for the financial year is near or above that limit, or they are in a north-eastern or hill State
+(that entry is marked unverified for those States), or they supply goods, tell them and suggest confirming with
+their CA. Read the limits from the file; do not state them from memory.
 
 **Owner GST-registered** (`fromGstin` set): also set `exportMode`:
 - `"lut"` when the owner has filed a Letter of Undertaking for this financial year: add `lut: { "arn", "fy" }`
