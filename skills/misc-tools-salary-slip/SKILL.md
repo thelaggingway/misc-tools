@@ -44,10 +44,11 @@ what you checked and where.
 - **ESI**: 0.75% of gross wages, only up to the ceiling (₹21,000; ₹25,000 for a person with disability).
   https://esic.gov.in/contribution
 - **Professional tax**: the state's own schedule — Maharashtra (mahagst.gov.in), Karnataka
-  (ptax.karnataka.gov.in), Tamil Nadu (the urban local body that collects it, e.g. chennaicorporation.gov.in),
-  Telangana (tgct.gov.in), Gujarat (commercialtax.gujarat.gov.in), Madhya Pradesh (mptax.mp.gov.in). West Bengal
-  is not in the rules file: pass `professionalTax` as a number taken from the state's page, or leave it out and
-  tell the owner.
+  (ptax.karnataka.gov.in), Telangana (tgct.gov.in), Gujarat (commercialtax.gujarat.gov.in), Madhya Pradesh
+  (mptax.mp.gov.in). Tamil Nadu is different: each urban local body sets its own schedule, so the rules file
+  holds only the Greater Chennai Corporation one, under the state name `Tamil Nadu (Chennai)`. For any other
+  local body, pass `professionalTax` as a number from that body's schedule. West Bengal is not in the rules
+  file either: pass the amount from the state's page, or leave it out and tell the owner.
 - If the rules file does not cover the month, the CLI refuses. Tell the owner which page needs re-checking
   rather than typing a rate from memory.
 - TDS is never computed: ask the owner or their CA for the month's figure.

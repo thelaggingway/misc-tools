@@ -94,8 +94,12 @@
     const state = String(d.state || "").trim();
     if (!state) throw new Error("state is required for professional tax (autoDeductions)");
     let found = entries.filter(e => e.state.toLowerCase() === state.toLowerCase());
-    if (!found.length)
+    if (!found.length) {
+      const near = entries.filter(e => e.state.toLowerCase().startsWith(state.toLowerCase()));
+      if (near.length)
+        throw new Error(`professional tax for "${state}" depends on the local body: this file has ${near.map(e => `"${e.state}"`).join(", ")}. Pass that as state, or professionalTax as a number from the local body's schedule.`);
       throw new Error(`no verified professional tax schedule for "${state}". Pass professionalTax as a number, or add the state to rules/professional-tax.json after checking its official notification.`);
+    }
     let assumed = "";
     if (found.length > 1) {
       const g = String(d.gender || "").toLowerCase();

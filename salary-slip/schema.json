@@ -40,7 +40,7 @@
       },
       "description": "Other allowances, each with a name and an amount"
     },
-    "state": { "type": "string", "description": "State where the employee works; decides the professional tax. Maharashtra, Karnataka, Tamil Nadu, Telangana, Gujarat and Madhya Pradesh are in rules/professional-tax.json" },
+    "state": { "type": "string", "description": "State where the employee works; decides the professional tax. In rules/professional-tax.json: Maharashtra, Karnataka, Telangana, Gujarat, Madhya Pradesh, and \"Tamil Nadu (Chennai)\" for the Greater Chennai Corporation area, where the tax is set by the local body" },
     "gender": { "enum": ["male", "female", "other"], "description": "Used only where a state's professional tax differs for men and women (Maharashtra)" },
     "autoDeductions": { "type": "boolean", "description": "Compute PF, ESI and professional tax from rules/ instead of taking pf, esi and professionalTax as given" },
     "pfApplicable": { "type": "boolean", "description": "Whether the establishment/employee is covered by EPF; with autoDeductions, false leaves PF out" },
