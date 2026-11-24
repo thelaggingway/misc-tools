@@ -1,0 +1,17 @@
+{
+  "docType": "credit_note",
+  "invNo": "CN/2627/01",
+  "date": "2026-09-20",
+  "refInvoice": "SR/2627/02",
+  "refDate": "2026-09-01",
+  "items": [
+    {
+      "desc": "One training session cancelled",
+      "sac": "998312",
+      "qty": 1,
+      "unit": "UNITS",
+      "rate": 10000
+    }
+  ],
+  "notes": "Session on 15 Sep cancelled by the client"
+}

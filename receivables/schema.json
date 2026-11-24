@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Receivables: fields read from each document and client file",
+  "description": "receivables does not write documents; it reads the workspace's documents/<client>/*.json, merged over profiles/me.json and clients/<client>.json like the invoice CLI. Only the fields below are read and type-checked. Other fields belong to invoice-generator (see its --schema), so unknown fields are allowed here instead of rejected.",
+  "type": "object",
+  "properties": {
+    "docType": { "enum": ["invoice", "proforma", "quotation", "receipt", "credit_note", "debit_note", "export_invoice"], "description": "invoice, debit_note and export_invoice add to what the client owes; receipt and credit_note reduce it; proforma and quotation are ignored" },
+    "invNo": { "type": "string", "description": "Document number; receipts and notes point to it with refInvoice" },
+    "date": { "type": "string", "format": "date", "description": "Document date, YYYY-MM-DD; documents dated after --as-of are left out" },
+    "due": { "type": "string", "pattern": "^$|^\\d{4}-\\d{2}-\\d{2}$", "description": "a date as YYYY-MM-DD, or empty (then the invoice date counts as the due date)" },
+    "items": { "type": "array", "items": { "type": "object", "properties": {
+      "qty": { "type": ["number", "string"], "pattern": "^-?\\d+(\\.\\d+)?$", "description": "a number" },
+      "rate": { "type": ["number", "string"], "pattern": "^-?\\d+(\\.\\d+)?$", "description": "a number" } } }, "description": "Line items; amount = qty × rate, as on the PDF" },
+    "taxMode": { "enum": ["none", "cgst_sgst", "igst"], "description": "GST mode; GST is added to the total and left out of the TDS base" },
+    "taxRate": { "type": ["number", "string"], "pattern": "^\\d+(\\.\\d+)?$", "description": "Total GST percent, default 18" },
+    "refInvoice": { "type": "string", "description": "Receipts and credit/debit notes: the invoice number they settle or adjust" },
+    "tds": { "type": "number", "minimum": 0, "description": "Receipts: income tax the client deducted at source from this payment, in rupees. The invoice counts as settled by amount received + tds" },
+    "tdsSection": { "enum": ["professional_fees", "technical_fees", "contractor", "commission", "rent_plant_machinery", "rent_land_building", "rent_by_individual", "paid_by_individual"], "description": "Rule id from rules/tds-sections.json the client deducts under; set it on the client file or on a receipt to check the TDS rate" },
+    "currency": { "type": "string", "pattern": "^[A-Z]{3}$", "description": "a 3-letter currency code like USD; default INR" },
+    "exchangeRate": { "type": ["number", "string"], "pattern": "^\\d+(\\.\\d+)?$", "description": "Rupees per unit of currency; converts foreign balances to rupees and INR receipts to the invoice currency" },
+    "buyerCountry": { "type": "string", "description": "Export invoices: the buyer's country" },
+    "toName": { "type": "string", "description": "Client name, used in the report and reminders" }
+  }
+}

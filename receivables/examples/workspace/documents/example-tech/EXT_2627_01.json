@@ -1,0 +1,14 @@
+{
+  "invNo": "EXT/2627/01",
+  "date": "2026-05-10",
+  "due": "2026-06-09",
+  "items": [
+    {
+      "desc": "Product strategy consulting, April",
+      "sac": "998312",
+      "qty": 1,
+      "unit": "UNITS",
+      "rate": 125000
+    }
+  ]
+}

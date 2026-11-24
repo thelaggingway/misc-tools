@@ -1,0 +1,14 @@
+{
+  "invNo": "DS/2627/00",
+  "date": "2026-06-01",
+  "due": "2026-06-15",
+  "items": [
+    {
+      "desc": "Logo refresh",
+      "sac": "998312",
+      "qty": 1,
+      "unit": "UNITS",
+      "rate": 15000
+    }
+  ]
+}

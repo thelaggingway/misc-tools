@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Receivables</title>
+<style>
+  :root { --navy:#1e293b; --violet:#4f46e5; --gray:#475569; --muted:#94a3b8; --line:#e2e8f0; --red:#b91c1c; --amber:#b45309; --green:#15803d; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: "Inter","Segoe UI",Helvetica,Arial,sans-serif; background:#f1f5f9; color:var(--gray); }
+  .app { display:grid; grid-template-columns: 340px 1fr; min-height:100vh; }
+  .form { background:#fff; border-right:1px solid var(--line); padding:18px 20px 40px; height:100vh; position:sticky; top:0; overflow-y:auto; }
+  .form h1 { font-size:18px; color:var(--navy); margin:0 0 4px; }
+  .form h2 { font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:var(--violet); margin:20px 0 8px; }
+  .form label { display:block; font-size:12px; margin:10px 0 3px; }
+  .form input, .form select { width:100%; padding:7px 9px; border:1px solid #cbd5e1; border-radius:6px; font:inherit; font-size:13px; color:var(--navy); }
+  .btn { display:inline-block; padding:8px 12px; border-radius:6px; border:1px solid #cbd5e1; background:#fff; cursor:pointer; font:inherit; font-size:13px; color:var(--navy); }
+  .btn.primary { background:var(--violet); border-color:var(--violet); color:#fff; font-weight:600; }
+  .hint { font-size:11px; color:var(--muted); margin-top:4px; line-height:1.4; }
+  .status { font-size:12px; margin-top:10px; color:var(--navy); white-space:pre-line; }
+  .preview { padding:30px; display:flex; justify-content:center; }
+  .page { width:210mm; min-height:297mm; background:#fff; box-shadow:0 4px 24px rgba(15,23,42,.12); padding:16mm 14mm; font-size:9.5pt; line-height:1.45; }
+  .hdr { display:flex; justify-content:space-between; align-items:flex-end; padding-bottom:10px; border-bottom:2px solid var(--navy); }
+  .hdr .t { font-size:18pt; font-weight:700; color:var(--navy); }
+  .hdr .s { color:var(--muted); font-size:8.5pt; text-transform:uppercase; letter-spacing:.08em; text-align:right; }
+  .empty { margin-top:40px; color:var(--muted); text-align:center; font-size:11pt; }
+  h3 { font-size:8.5pt; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--violet); margin:20px 0 6px; }
+  .cards { display:grid; grid-template-columns:1.3fr repeat(5, minmax(0, 1fr)); gap:6px; margin-top:16px; }
+  .card { border:1px solid var(--line); border-radius:6px; padding:7px 8px; min-width:0; }
+  .card .k { font-size:7.5pt; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; }
+  .card .v { font-weight:700; color:var(--navy); font-size:9.5pt; white-space:nowrap; }
+  .card.total { background:var(--navy); border-color:var(--navy); } .card.total .k { color:#cbd5e1; } .card.total .v { color:#fff; font-size:12pt; }
+  .card.b90 .v { color:var(--red); } .card.b61 .v { color:var(--amber); }
+  .sub { font-size:8.5pt; color:var(--muted); margin-top:6px; }
+  table { width:100%; border-collapse:collapse; }
+  th { background:var(--navy); color:#fff; font-size:7pt; text-transform:uppercase; letter-spacing:.04em; padding:6px 4px; font-weight:700; text-align:left; }
+  td { padding:6px 4px; border-bottom:1px solid var(--line); vertical-align:top; font-size:8pt; }
+  .r { text-align:right; white-space:nowrap; } .nw { white-space:nowrap; }
+  .who { font-weight:600; color:var(--navy); }
+  .tag { display:inline-block; font-size:7pt; font-weight:700; padding:1px 6px; border-radius:10px; white-space:nowrap; }
+  .t-not_due { background:#e0f2fe; color:#0369a1; } .t-0-30 { background:#fef9c3; color:#854d0e; } .t-31-60 { background:#ffedd5; color:#9a3412; }
+  .t-61-90 { background:#fee2e2; color:#991b1b; } .t-90 { background:var(--red); color:#fff; }
+  .t-ok { background:#dcfce7; color:var(--green); } .t-warn { background:#fee2e2; color:#991b1b; } .t-info { background:#e0e7ff; color:#3730a3; }
+  ul.list { margin:0; padding-left:16px; } ul.list li { margin:3px 0; }
+  .src { font-size:8pt; color:var(--muted); overflow-wrap:anywhere; }
+  .rem { border:1px solid var(--line); border-radius:6px; padding:8px 10px; margin-bottom:10px; break-inside:avoid; }
+  .rem .head { display:flex; justify-content:space-between; align-items:center; font-weight:600; color:var(--navy); }
+  .rem .grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:6px; }
+  .rem pre { white-space:pre-wrap; font:inherit; font-size:8.5pt; background:#f8fafc; border-radius:4px; padding:6px 8px; margin:2px 0 0; }
+  .rem .lbl { font-size:7.5pt; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); display:flex; justify-content:space-between; }
+  .copy { font-size:7.5pt; padding:1px 6px; }
+  .note { font-size:8pt; color:var(--muted); margin-top:18px; border-top:1px solid var(--line); padding-top:8px; }
+  .pb { break-before:page; }
+  @page { size:A4; margin:12mm 0; }
+  @media print {
+    body { background:#fff; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    .app { display:block; } .form, .copy { display:none; } .preview { padding:0; display:block; }
+    .page { box-shadow:none; width:100%; min-height:auto; padding:0 14mm; }
+    tr { break-inside:avoid; }
+  }
+  @media (max-width:1100px) { .app { grid-template-columns:1fr; } .form { height:auto; position:static; } .preview { overflow-x:auto; justify-content:flex-start; } }
+</style>
+<script src="../shared/india.js"></script>
+<script src="receivables.js"></script>
+</head>
+<body>
+<div class="app">
+  <form class="form" id="f" onsubmit="return false">
+    <h1>Receivables</h1>
+    <div class="hint">Who owes you what, from your workspace's documents. Everything stays in this browser.</div>
+    <h2>Workspace</h2>
+    <label>Choose your workspace folder</label>
+    <input type="file" id="ws" webkitdirectory directory multiple>
+    <div class="hint">The folder made by setup.mjs, with profiles/, clients/ and documents/. Your browser may ask to confirm the upload; nothing leaves your computer.</div>
+    <label>TDS rules (rules/tds-sections.json)</label>
+    <input type="file" id="rules" accept=".json">
+    <div class="hint" id="rulesHint">Loaded automatically when this page is served from the misc-tools folder; otherwise choose the file from misc-tools/rules/ to check TDS rates.</div>
+    <h2>Report</h2>
+    <label>As of</label><input type="date" id="asOf">
+    <label>You are</label>
+    <select id="payee"><option value="individual_huf">An individual or HUF (freelancer, proprietor)</option><option value="other">A firm, LLP or company</option></select>
+    <div class="hint">Decides the contractor TDS rate (1% or 2%).</div>
+    <div class="actions" style="margin-top:16px"><button class="btn primary" type="button" onclick="window.print()">Print / Save PDF</button></div>
+    <div class="status" id="status"></div>
+  </form>
+  <div class="preview"><div class="page" id="page"></div></div>
+</div>
+<script>
+const { buildReport, money, FEMA } = window.Receivables;
+const B = { not_due: "Not yet due", "0-30": "0-30 days", "31-60": "31-60 days", "61-90": "61-90 days", "90+": "90+ days" };
+const today = new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" });
+let WS = null, RULES = null;
+
+function render(r) {
+  const P = document.getElementById("page");
+  if (!r) { P.innerHTML = `<div class="hdr"><div class="t">Receivables</div><div class="s">misc-tools</div></div>
+    <div class="empty">Choose your workspace folder on the left to see who owes you what.</div>`; return; }
+  const s = r.summary, tagCls = b => "t-" + (b === "90+" ? "90" : b);
+  const ageTxt = i => i.daysPastDue < 0 ? `due in ${-i.daysPastDue} d` : `${i.daysPastDue} d late`;
+  let h = `<div class="hdr"><div><div class="t">Receivables</div><div>${esc(r.seller)}</div></div>
+    <div class="s">As of ${fmtDate(r.asOf)}<br>${s.open} open · ${s.paid} settled · ${s.clients} client${s.clients === 1 ? "" : "s"}</div></div>
+    <div class="cards"><div class="card total"><div class="k">Outstanding</div><div class="v">${inr(s.outstandingInr)}</div></div>
+    ${Object.entries(B).map(([k, v]) => `<div class="card ${k === "90+" ? "b90" : k === "61-90" ? "b61" : ""}"><div class="k">${v}</div><div class="v">${inr(s.buckets[k])}</div></div>`).join("")}</div>
+    <div class="sub">Days past the due date. Foreign-currency balances are converted at the invoice's exchange rate.${s.unconverted.length ? " Not in the total (no exchange rate): " + esc(s.unconverted.join(", ")) + "." : ""}</div>`;
+  if (r.open.length) h += `<h3>Unpaid and part-paid</h3><table><tr><th>Client</th><th>Invoice</th><th>Dated</th><th>Due</th><th class="r">Total</th><th class="r">Paid / adjusted</th><th class="r">Balance</th><th>Age</th></tr>
+    ${r.open.map(i => `<tr><td class="who">${esc(i.clientName)}</td><td class="nw">${esc(i.number)}${i.type === "debit_note" ? "<br><span class=src>debit note</span>" : ""}</td>
+      <td class="nw">${fmtDate(i.date)}</td><td class="nw">${fmtDate(i.due)}${i.dueGiven ? "" : "<br><span class=src>no due date</span>"}</td>
+      <td class="r">${money(i.total, i.currency)}</td><td class="r">${money(i.settled, i.currency)}${i.tds ? `<br><span class=src>TDS ${money(i.tds, i.currency)}</span>` : ""}${i.credited ? `<br><span class=src>credit ${money(i.credited, i.currency)}</span>` : ""}</td>
+      <td class="r"><b>${money(i.balance, i.currency)}</b>${i.currency !== "INR" && i.balanceInr != null ? `<br><span class=src>≈ ${inr(i.balanceInr)}</span>` : ""}</td>
+      <td><span class="tag ${tagCls(i.bucket)}">${B[i.bucket]}</span><br><span class=src>${ageTxt(i)}</span></td></tr>`).join("")}</table>`;
+  else h += `<div class="empty">Nothing outstanding. Every invoice is settled.</div>`;
+  if (r.exports.length) h += `<h3>Export invoices: FEMA realisation deadline</h3><table><tr><th>Client</th><th>Invoice</th><th>Dated</th><th class="r">Value</th><th class="r">Unrealised</th><th>Realise by</th></tr>
+    ${r.exports.map(i => `<tr><td class="who">${esc(i.clientName)}${i.buyerCountry ? `<br><span class=src>${esc(i.buyerCountry)}</span>` : ""}</td><td class="nw">${esc(i.number)}</td><td class="nw">${fmtDate(i.date)}</td>
+      <td class="r">${money(i.total, i.currency)}</td><td class="r">${i.fema.realised ? "realised" : money(i.balance, i.currency)}</td>
+      <td>${i.fema.realised ? "" : `<b class="nw">${fmtDate(i.fema.deadline)}</b> <span class="tag ${i.fema.daysLeft < 0 ? "t-90" : i.fema.daysLeft <= 60 ? "t-61-90" : "t-not_due"}">${i.fema.daysLeft < 0 ? -i.fema.daysLeft + " d late" : i.fema.daysLeft + " d left"}</span>`}${i.fema.note ? `<br><span class=src>${esc(i.fema.note)}</span>` : ""}</td></tr>`).join("")}</table>
+    <div class="src">${esc(FEMA.basis)} Source: <a href="${FEMA.url}">${FEMA.cite}</a>. An authorised dealer bank can extend the period on request.</div>`;
+  h += `<h3>TDS deducted by clients (match against Form 26AS / AIS)</h3>`;
+  h += r.tdsByClient.length ? `<table><tr><th>Financial year</th><th>Client</th><th>Section</th><th class="r">Receipts</th><th class="r">Settled (received + TDS)</th><th class="r">TDS</th></tr>
+    ${r.tdsByClient.map(g => `<tr><td class="nw">FY ${g.fy}</td><td class="who">${esc(g.clientName)}</td><td>${esc(g.sections.join(", ") || "not set")}</td><td class="r">${g.receipts}</td><td class="r">${inr(g.gross)}</td><td class="r"><b>${inr(g.tds)}</b></td></tr>`).join("")}</table>`
+    : `<div class="sub">No TDS recorded on receipts.</div>`;
+  if (r.tdsChecks.length) h += `<h3>TDS checks</h3><ul class="list">${r.tdsChecks.map(c => `<li><span class="tag t-${c.level}">${c.level}</span> <b>${esc(c.clientName)}</b>, ${esc(c.at)}: ${esc(c.msg)}${c.source ? ` <span class=src>(${esc(c.source)})</span>` : ""}</li>`).join("")}</ul>
+    <div class="src">${r.tdsRules ? `rules/tds-sections.json checked ${r.tdsRules.checkedOn}, covers ${fmtDate(r.tdsRules.coverage.from)} to ${fmtDate(r.tdsRules.coverage.to)}.` : "TDS rules not loaded: rates were not checked."} Confirm on the official source before relying on it.</div>`;
+  const attn = [...r.unapplied.map(p => `${esc(p.file)}: ${p.type.replace("_", " ")} ${esc(p.number)} for ${money(p.amount, p.currency)} ${esc(p.why)}; not counted against any invoice`),
+    ...r.problems.map(esc), ...(r.laterDocuments.length ? [`Dated after ${fmtDate(r.asOf)}, left out: ${esc(r.laterDocuments.join(", "))}`] : [])];
+  if (attn.length) h += `<h3>Needs attention</h3><ul class="list">${attn.map(x => `<li>${x}</li>`).join("")}</ul>`;
+  if (r.reminders.length) h += `<h3 class="pb">Reminder drafts (not sent)</h3><div class="sub" style="margin:0 0 8px">Read and edit before sending. These tools never send anything.</div>
+    ${r.reminders.map((m, n) => `<div class="rem"><div class="head"><span>${esc(m.clientName)} · ${esc(m.invoices.join(", "))}</span><span class="tag ${tagCls(m.daysPastDue > 90 ? "90+" : m.daysPastDue > 60 ? "61-90" : m.daysPastDue > 30 ? "31-60" : "0-30")}">${m.daysPastDue} d late</span></div>
+      <div class="grid"><div><div class="lbl">WhatsApp <button class="btn copy" type="button" onclick="copyText(${n},'w')">Copy</button></div><pre>${esc(m.whatsapp)}</pre></div>
+      <div><div class="lbl">Email: ${esc(m.email_draft.subject)} <button class="btn copy" type="button" onclick="copyText(${n},'e')">Copy</button></div><pre>${esc(m.email_draft.body)}</pre></div></div></div>`).join("")}`;
+  h += `<div class="note">Made with misc-tools receivables from the workspace's own documents. Invoices, debit notes and export invoices add to what a client owes; receipts (amount received plus TDS) and credit notes reduce it. Not tax advice.</div>`;
+  P.innerHTML = h;
+  window.REPORT = r;
+}
+function copyText(n, k) { const m = window.REPORT.reminders[n]; navigator.clipboard.writeText(k === "w" ? m.whatsapp : `Subject: ${m.email_draft.subject}\n\n${m.email_draft.body}`); }
+
+function rebuild() {
+  if (!WS) return render(null);
+  const asOf = document.getElementById("asOf").value || today;
+  render(buildReport({ ...WS, rules: RULES, asOf, payee: document.getElementById("payee").value }));
+}
+async function loadFolder(files) {
+  const ws = { profiles: {}, clients: {}, documents: [] }, bad = [];
+  for (const f of files) {
+    const rel = (f.webkitRelativePath || f.name).split("/").slice(1); // drop the chosen folder's own name
+    if (!f.name.endsWith(".json")) continue;
+    const kind = rel[0];
+    if (!((kind === "profiles" || kind === "clients") && rel.length === 2) && !(kind === "documents" && rel.length === 3)) continue;
+    let data; try { data = JSON.parse(await f.text()); } catch (e) { bad.push(rel.join("/") + ": " + e.message); continue; }
+    if (kind === "documents") ws.documents.push({ client: rel[1], file: rel[2], data });
+    else ws[kind][f.name.replace(/\.json$/, "")] = data;
+  }
+  ws.documents.sort((a, b) => (a.client + a.file).localeCompare(b.client + b.file));
+  WS = ws;
+  document.getElementById("status").textContent = `Loaded ${ws.documents.length} documents, ${Object.keys(ws.clients).length} clients.` +
+    (bad.length ? "\nCould not read:\n" + bad.join("\n") : "") + (ws.documents.length ? "" : "\nNo documents/<client>/*.json found: choose the workspace folder itself.");
+  rebuild();
+}
+function setRules(r, how) {
+  RULES = r;
+  document.getElementById("rulesHint").textContent = `TDS rules ${how}: checked ${r.checked_on}, covers ${r.coverage.from} to ${r.coverage.to}.`;
+}
+
+if (window.RECEIVABLES_DATA) { // the CLI injects a finished report when printing a PDF
+  document.querySelector(".form").style.display = "none";
+  render(window.RECEIVABLES_DATA);
+} else {
+  document.getElementById("asOf").value = today;
+  document.getElementById("ws").addEventListener("change", e => loadFolder([...e.target.files]));
+  document.getElementById("rules").addEventListener("change", e => e.target.files[0] && e.target.files[0].text().then(t => { setRules(JSON.parse(t), "loaded"); rebuild(); }));
+  for (const id of ["asOf", "payee"]) document.getElementById(id).addEventListener("change", rebuild);
+  fetch("../rules/tds-sections.json").then(r => r.ok ? r.json() : null).then(r => { if (r) { setRules(r, "found"); rebuild(); } }).catch(() => {});
+  render(null);
+}
+</script>
+</body>
+</html>

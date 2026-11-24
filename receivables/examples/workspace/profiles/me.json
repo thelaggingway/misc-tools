@@ -1,0 +1,12 @@
+{
+  "fromName": "Meera Example",
+  "fromAddress": "1, Sample Street, Pune, Maharashtra 411001",
+  "fromTag": "UNREGISTERED",
+  "bankName": "Meera Example",
+  "bank": "Example Bank",
+  "acct": "000000000000",
+  "ifsc": "EXMP0000000",
+  "upiId": "meera.example@okexample",
+  "terms": "Due within 30 days",
+  "signName": "Meera Example"
+}

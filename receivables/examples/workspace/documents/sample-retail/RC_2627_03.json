@@ -1,0 +1,17 @@
+{
+  "docType": "receipt",
+  "invNo": "RC/2627/03",
+  "date": "2026-10-15",
+  "refInvoice": "SR/2627/01",
+  "refDate": "2026-08-20",
+  "payMode": "NEFT",
+  "payRef": "UTR00000000003",
+  "items": [
+    {
+      "desc": "Payment against invoice SR/2627/01",
+      "qty": 1,
+      "rate": 58000
+    }
+  ],
+  "tds": 1000
+}

@@ -1,0 +1,14 @@
+{
+  "invNo": "DS/2627/01",
+  "date": "2026-08-27",
+  "due": "2026-09-10",
+  "items": [
+    {
+      "desc": "Brand guidelines",
+      "sac": "998312",
+      "qty": 1,
+      "unit": "UNITS",
+      "rate": 20000
+    }
+  ]
+}

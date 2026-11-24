@@ -1,0 +1,16 @@
+{
+  "docType": "receipt",
+  "invNo": "RC/2627/02",
+  "date": "2026-06-10",
+  "refInvoice": "DS/2627/00",
+  "refDate": "2026-06-01",
+  "payMode": "UPI",
+  "payRef": "UTR00000000002",
+  "items": [
+    {
+      "desc": "Payment against invoice DS/2627/00",
+      "qty": 1,
+      "rate": 15000
+    }
+  ]
+}

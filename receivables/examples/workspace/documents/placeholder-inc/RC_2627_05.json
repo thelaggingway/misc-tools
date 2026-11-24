@@ -1,0 +1,18 @@
+{
+  "docType": "receipt",
+  "invNo": "RC/2627/05",
+  "date": "2026-11-18",
+  "refInvoice": "EXP/2627/02",
+  "refDate": "2026-10-20",
+  "payMode": "SWIFT",
+  "payRef": "UTR00000000005",
+  "items": [
+    {
+      "desc": "Payment against invoice EXP/2627/02",
+      "qty": 1,
+      "rate": 3000
+    }
+  ],
+  "currency": "USD",
+  "exchangeRate": 84.2
+}

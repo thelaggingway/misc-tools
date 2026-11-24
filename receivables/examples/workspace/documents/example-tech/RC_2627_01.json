@@ -1,0 +1,18 @@
+{
+  "docType": "receipt",
+  "invNo": "RC/2627/01",
+  "date": "2026-06-05",
+  "refInvoice": "EXT/2627/01",
+  "refDate": "2026-05-10",
+  "payMode": "NEFT",
+  "payRef": "UTR00000000001",
+  "items": [
+    {
+      "desc": "Payment against invoice EXT/2627/01",
+      "qty": 1,
+      "rate": 112500
+    }
+  ],
+  "tds": 12500,
+  "notes": "TDS of ₹12,500 deducted by the client"
+}

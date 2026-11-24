@@ -1,0 +1,14 @@
+{
+  "invNo": "DS/2627/02",
+  "date": "2026-11-20",
+  "due": "2026-12-20",
+  "items": [
+    {
+      "desc": "Social media templates",
+      "sac": "998312",
+      "qty": 1,
+      "unit": "UNITS",
+      "rate": 15000
+    }
+  ]
+}

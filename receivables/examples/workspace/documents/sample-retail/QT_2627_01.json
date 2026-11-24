@@ -1,0 +1,15 @@
+{
+  "docType": "quotation",
+  "invNo": "QT/2627/01",
+  "date": "2026-11-01",
+  "due": "2026-11-30",
+  "items": [
+    {
+      "desc": "Quarterly audit (quotation, ignored)",
+      "sac": "998312",
+      "qty": 1,
+      "unit": "UNITS",
+      "rate": 75000
+    }
+  ]
+}

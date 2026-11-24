@@ -1,0 +1,14 @@
+{
+  "invNo": "EXT/2627/03",
+  "date": "2026-10-01",
+  "due": "2026-10-31",
+  "items": [
+    {
+      "desc": "Workshop facilitation",
+      "sac": "998312",
+      "qty": 2,
+      "unit": "UNITS",
+      "rate": 30000
+    }
+  ]
+}

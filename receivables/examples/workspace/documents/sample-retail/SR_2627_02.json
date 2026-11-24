@@ -1,0 +1,14 @@
+{
+  "invNo": "SR/2627/02",
+  "date": "2026-09-01",
+  "due": "2026-10-01",
+  "items": [
+    {
+      "desc": "Training sessions",
+      "sac": "998312",
+      "qty": 4,
+      "unit": "UNITS",
+      "rate": 10000
+    }
+  ]
+}

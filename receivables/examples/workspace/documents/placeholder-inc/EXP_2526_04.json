@@ -1,0 +1,16 @@
+{
+  "docType": "export_invoice",
+  "invNo": "EXP/2526/04",
+  "date": "2026-03-15",
+  "due": "2026-04-14",
+  "exchangeRate": 86,
+  "items": [
+    {
+      "desc": "UX research, February",
+      "sac": "998312",
+      "qty": 1,
+      "unit": "UNITS",
+      "rate": 2000
+    }
+  ]
+}
