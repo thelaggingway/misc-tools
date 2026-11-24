@@ -9,7 +9,9 @@ import { join, resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const KEYS = ["fromName", "fromAddress", "fromTag", "toName", "toAddress", "invNo", "date", "due", "place",
-  "items", "taxMode", "taxRate", "bankName", "bank", "acct", "ifsc", "terms", "footer", "signName"];
+  "items", "taxMode", "taxRate", "bankName", "bank", "acct", "ifsc", "terms", "footer", "signName",
+  "docType", "refInvoice", "refDate", "payMode", "payRef", "notes", "upiQr", "upiId", "upiName"];
+const DOC_TYPES = ["invoice", "proforma", "quotation", "receipt", "credit_note", "debit_note"];
 const ITEM_KEYS = ["desc", "sac", "qty", "unit", "rate"];
 
 function fail(msg) { console.error("error: " + msg); process.exit(1); }
@@ -38,7 +40,11 @@ if (data.items !== undefined) {
   });
 }
 if (data.taxMode && !["none", "cgst_sgst", "igst"].includes(data.taxMode)) fail(`taxMode must be none, cgst_sgst or igst`);
-for (const k of ["date", "due"]) if (data[k] && !/^\d{4}-\d{2}-\d{2}$/.test(data[k])) fail(`${k} must be YYYY-MM-DD`);
+if (data.docType && !DOC_TYPES.includes(data.docType)) fail(`docType must be one of ${DOC_TYPES.join(", ")}`);
+if (data.upiQr !== undefined && typeof data.upiQr !== "boolean") fail(`upiQr must be true or false`);
+if (data.upiQr && !data.upiId) fail(`upiQr is true but upiId is missing`);
+if (data.upiId && !/^[\w.-]{2,256}@[a-zA-Z][\w.-]{1,63}$/.test(data.upiId)) fail(`upiId "${data.upiId}" is not a UPI ID like name@bank`);
+for (const k of ["date", "due", "refDate"]) if (data[k] && !/^\d{4}-\d{2}-\d{2}$/.test(data[k])) fail(`${k} must be YYYY-MM-DD`);
 
 out = resolve(out || (data.invNo || "invoice").replace(/[\/\\]/g, "_") + ".pdf");
 
