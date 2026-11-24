@@ -33,6 +33,8 @@ const digits = q.replace(/\D/g, "");
 const tokens = q.split(/\s+/).filter(Boolean);
 // "4819 10, 4819 20" and "5208 to 5212" hold several codes; compare against each.
 const codesOf = e => String(e[kind.code]).split(/,|\bto\b/).map(s => s.replace(/\D/g, "")).filter(Boolean);
+// Whole words are compared as tokens, not with a /\b...\b/ pattern: written inside a template literal with a
+// single backslash, \b is the backspace escape, so the pattern matches U+0008 and never matches a word.
 const wordsIn = s => new Set(s.split(/[^a-z0-9]+/).filter(Boolean));
 
 const hits = [];
