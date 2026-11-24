@@ -12,9 +12,10 @@
         "quotation",
         "receipt",
         "credit_note",
-        "debit_note"
+        "debit_note",
+        "export_invoice"
       ],
-      "description": "Document type; decides the title and which sections show"
+      "description": "Document type; decides the title and which sections show. export_invoice is a tax invoice for export of services in a foreign currency"
     },
     "fromName": {
       "type": "string",
@@ -27,6 +28,10 @@
     "fromTag": {
       "type": "string",
       "description": "Text under the title, e.g. UNREGISTERED or GSTIN: 23ABCDE1234F1Z5"
+    },
+    "fromGstin": {
+      "type": "string",
+      "description": "Seller GSTIN, if GST-registered; checked with its check digit, printed under the address, and used by taxMode auto"
     },
     "toName": {
       "type": "string",
@@ -56,7 +61,7 @@
     },
     "place": {
       "type": "string",
-      "description": "Place of supply (state name)"
+      "description": "Place of supply: a state name (Karnataka) or GST state code (29, 29-Karnataka). A bare code prints as \"Karnataka (29)\". On an export invoice, defaults to Outside India"
     },
     "items": {
       "type": "array",
@@ -104,9 +109,10 @@
       "enum": [
         "none",
         "cgst_sgst",
-        "igst"
+        "igst",
+        "auto"
       ],
-      "description": "none prints Tax N/A; cgst_sgst splits taxRate in half; igst charges taxRate"
+      "description": "none prints Tax N/A; cgst_sgst splits taxRate in half per line (odd paisa to SGST); igst charges taxRate; auto picks from the seller's GSTIN state and place: same state cgst_sgst (UTGST in a Union territory), different igst, no seller GSTIN none. Ignored on export invoices (see exportMode)"
     },
     "taxRate": {
       "type": [
@@ -178,6 +184,65 @@
     "signName": {
       "type": "string",
       "description": "Signatory name"
+    },
+    "currency": {
+      "type": "string",
+      "pattern": "^[A-Z]{3}$",
+      "description": "a 3-letter currency code like USD (export invoices; item rates are in this currency)"
+    },
+    "exchangeRate": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Rupees per one unit of currency, e.g. 83.5 (export invoices); printed with its source and date"
+    },
+    "exchangeRateSource": {
+      "type": "string",
+      "description": "Where the exchange rate comes from, e.g. RBI reference rate (export invoices)"
+    },
+    "exchangeRateDate": {
+      "type": "string",
+      "pattern": "^$|^\\d{4}-\\d{2}-\\d{2}$",
+      "description": "a date as YYYY-MM-DD, or empty (the exchange rate's date)"
+    },
+    "buyerCountry": {
+      "type": "string",
+      "description": "Country of the buyer, printed as the country of destination (export invoices)"
+    },
+    "exportMode": {
+      "enum": [
+        "lut",
+        "igst_paid"
+      ],
+      "description": "Export invoices: lut (under Letter of Undertaking, without IGST) or igst_paid (on payment of IGST at taxRate); picks the Rule 46 endorsement"
+    },
+    "lut": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "arn",
+        "fy"
+      ],
+      "description": "Letter of Undertaking for exportMode lut",
+      "properties": {
+        "arn": {
+          "type": "string",
+          "description": "ARN of the LUT filed on the GST portal (FORM GST RFD-11)"
+        },
+        "fy": {
+          "type": "string",
+          "pattern": "^$|^\\d{4}-\\d{2}$",
+          "description": "a financial year like 2026-27, or empty"
+        }
+      }
+    },
+    "tds": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Receipts: rupees of income tax the client deducted at source from this payment. Not printed; read by the receivables tool"
+    },
+    "tdsSection": {
+      "type": "string",
+      "description": "Rule id from rules/tds-sections.json the client deducts TDS under, e.g. professional_fees (the CLI checks it against that file). Not printed; read by the receivables tool"
     }
   }
 }

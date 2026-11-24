@@ -55,6 +55,11 @@
   .qr svg { width:118px; height:118px; display:block; margin:0 auto 4px; }
   .qr .id { color:var(--navy); font-weight:600; font-size:8pt; overflow-wrap:anywhere; }
   .notes { margin-top:16px; }
+  .endorse { margin-top:16px; border:1.5px solid var(--navy); border-radius:6px; padding:7px 12px; font-size:8.5pt; font-weight:700; color:var(--navy); letter-spacing:.02em; }
+  .fx { margin-top:10px; margin-left:auto; width:max-content; min-width:34%; font-size:9pt; color:var(--gray); }
+  .fx div { display:flex; justify-content:space-between; gap:28px; padding:1px 0; }
+  .fx .head { color:var(--muted); font-size:8pt; }
+  .err { color:#b91c1c; font-weight:600; white-space:normal; }
   .notes .sec { color:var(--muted); }
   .bank .kv { display:grid; grid-template-columns:1fr 1fr; padding:2px 0; }
   .bank .kv span:first-child { color:var(--muted); }
@@ -94,12 +99,14 @@
       <option value="receipt">Payment receipt</option>
       <option value="credit_note">Credit note</option>
       <option value="debit_note">Debit note</option>
+      <option value="export_invoice">Export invoice (services, foreign currency)</option>
     </select>
 
     <h2>From (you)</h2>
     <label>Name</label><input data-k="fromName">
     <label>Address</label><input data-k="fromAddress">
-    <label>Tag under the title (e.g. UNREGISTERED or GSTIN: …)</label><input data-k="fromTag">
+    <label>Tag under the title (e.g. UNREGISTERED)</label><input data-k="fromTag">
+    <label>Your GSTIN (if registered)</label><input data-k="fromGstin">
 
     <h2>Bill to</h2>
     <label>Client name</label><input data-k="toName">
@@ -109,7 +116,7 @@
     <h2>Document details</h2>
     <div class="row">
       <div><label>Number</label><input data-k="invNo"></div>
-      <div><label>Place of supply</label><input data-k="place"></div>
+      <div><label>Place of supply (state or code)</label><input data-k="place"></div>
       <div><label>Date</label><input type="date" data-k="date"></div>
       <div class="when-due"><label>Due / valid until</label><input type="date" data-k="due"></div>
     </div>
@@ -122,6 +129,27 @@
       <div><label>Payment reference (UTR)</label><input data-k="payRef"></div>
     </div>
 
+    <div class="when-export">
+      <h2>Export</h2>
+      <div class="row">
+        <div><label>Currency (e.g. USD)</label><input data-k="currency"></div>
+        <div><label>Buyer's country</label><input data-k="buyerCountry"></div>
+        <div><label>Exchange rate (₹ per unit)</label><input type="number" step="any" data-k="exchangeRate"></div>
+        <div><label>Rate date</label><input type="date" data-k="exchangeRateDate"></div>
+      </div>
+      <label>Exchange rate source (e.g. RBI reference rate)</label><input data-k="exchangeRateSource">
+      <label>Export under</label>
+      <select data-k="exportMode">
+        <option value="">Choose…</option>
+        <option value="lut">Letter of Undertaking (no IGST)</option>
+        <option value="igst_paid">Payment of IGST</option>
+      </select>
+      <div class="row">
+        <div><label>LUT ARN</label><input data-k="lut.arn"></div>
+        <div><label>LUT financial year</label><input data-k="lut.fy" placeholder="2026-27"></div>
+      </div>
+    </div>
+
     <h2>Line items</h2>
     <div id="items"></div>
     <button class="btn" type="button" onclick="addItem()">+ Add item</button>
@@ -130,12 +158,14 @@
     <div class="row">
       <div><label>Tax type</label>
         <select data-k="taxMode">
+          <option value="auto">Automatic (from your GSTIN and place)</option>
           <option value="none">None (N/A)</option>
           <option value="cgst_sgst">CGST + SGST (intra-state)</option>
           <option value="igst">IGST (inter-state)</option>
         </select></div>
       <div><label>Total GST rate %</label><input type="number" step="0.01" data-k="taxRate"></div>
     </div>
+    <div class="hint">Automatic: CGST + SGST when your GSTIN's state is the place of supply, IGST otherwise, none without a GSTIN. Export invoices ignore the tax type and use “Export under”.</div>
 
     <h2>Bank details</h2>
     <label>Account name</label><input data-k="bankName">
@@ -181,6 +211,7 @@ const DEFAULTS = {
   footer: "E&OE — Subject to jurisdiction of courts in India", signName: "Your Name",
   toGstin: "", docType: "invoice", refInvoice: "", refDate: "", payMode: "", payRef: "", notes: "",
   upiQr: false, upiId: "", upiName: "",
+  fromGstin: "", currency: "", exchangeRateSource: "", exchangeRateDate: "", buyerCountry: "",
 };
 // What each document type shows. "due" is the label for the due date (null hides it); "ref" shows the
 // original invoice; "pay" shows payment mode and UTR; "bank" shows bank details and the UPI QR.
@@ -191,7 +222,39 @@ const DOCS = {
   receipt:     { title: "PAYMENT RECEIPT",  no: "Receipt No",     heading: "Receipt Details",     to: "Received From", ref: true, pay: true, total: "Amount Received" },
   credit_note: { title: "CREDIT NOTE",      no: "Credit Note No", heading: "Credit Note Details", to: "Issued To",     ref: true, total: "Total Credit" },
   debit_note:  { title: "DEBIT NOTE",       no: "Debit Note No",  heading: "Debit Note Details",  to: "Bill To",       ref: true, due: "Due", bank: true },
+  export_invoice: { title: "TAX INVOICE",     no: "Invoice No",     heading: "Invoice Details",     to: "Bill To",       due: "Due",         bank: true, tag: "Export of services", export: true },
 };
+// Endorsements required on export invoices, word for word from the second proviso to CGST Rule 46 (as substituted
+// by Notification 17/2017-CT), read on 2026-11-24 at
+// https://taxinformation.cbic.gov.in/content/html/tax_repository/gst/rules/cgst_rules/active/chapter6/rule46_v1.00.html
+const ENDORSE = {
+  igst_paid: "SUPPLY MEANT FOR EXPORT/SUPPLY TO SEZ UNIT OR SEZ DEVELOPER FOR AUTHORISED OPERATIONS ON PAYMENT OF INTEGRATED TAX",
+  lut: "SUPPLY MEANT FOR EXPORT/SUPPLY TO SEZ UNIT OR SEZ DEVELOPER FOR AUTHORISED OPERATIONS UNDER BOND OR LETTER OF UNDERTAKING WITHOUT PAYMENT OF INTEGRATED TAX",
+};
+// GST state codes from rules/gst-state-codes.json: injected by cli.mjs, or fetched when the page is served over
+// http(s). From file:// neither works, so taxMode auto then needs place as a state code (e.g. 29).
+let GST = window.INVOICE_DATA && window.INVOICE_DATA.$gstStates ? { entries: window.INVOICE_DATA.$gstStates } : null;
+if (!GST && location.protocol !== "file:")
+  fetch("../rules/gst-state-codes.json").then(r => r.json()).then(r => { GST = r; render(); }).catch(() => {});
+function states() { // the list, unless the document date is outside the dates the rule file vouches for
+  const c = GST && GST.coverage;
+  return GST && (!c || (S.date >= c.from && S.date <= c.to)) ? GST.entries : null;
+}
+function placeState() {
+  if (states()) return gstStateOf(S.place, states());
+  const m = String(S.place || "").trim().match(/^(\d{1,2})(?!\d)/);
+  return m ? { code: m[1].padStart(2, "0") } : null;
+}
+// Which GST applies: { mode: none|cgst_sgst|igst, ut, error }.
+function taxPlan() {
+  if (S.docType === "export_invoice") return { mode: S.exportMode === "igst_paid" ? "igst" : "none" };
+  const place = placeState();
+  if (S.taxMode !== "auto") return { mode: S.taxMode, ut: place && place.ut };
+  const seller = String(S.fromGstin || "").trim().slice(0, 2);
+  if (!seller) return { mode: "none" };
+  if (!place) return { mode: "none", error: `Place of supply “${S.place || ""}” not recognised` + (states() ? "" : "; enter its state code, e.g. 29") };
+  return place.code === seller ? { mode: "cgst_sgst", ut: place.ut } : { mode: "igst" };
+}
 const UPI_LIMIT = 100000; // most banks cap a single UPI payment at ₹1 lakh
 const KEY = "invoice-generator-v1";
 let S = load();
@@ -207,44 +270,62 @@ function render() {
   const items = S.items.map(i => ({ ...i, amount: (Number(i.qty)||0) * (Number(i.rate)||0) }));
   const sub = items.reduce((a, i) => a + i.amount, 0);
   const rate = Number(S.taxRate) || 0;
-  let taxRows = `<div><span>Tax</span><span>N/A</span></div>`, tax = 0;
-  if (S.taxMode === "cgst_sgst") { const h = sub * rate / 200; tax = 2*h;
-    taxRows = `<div><span>CGST @ ${rate/2}%</span><span>${inr(h)}</span></div><div><span>SGST @ ${rate/2}%</span><span>${inr(h)}</span></div>`; }
-  if (S.taxMode === "igst") { tax = sub * rate / 100; taxRows = `<div><span>IGST @ ${rate}%</span><span>${inr(tax)}</span></div>`; }
+  const D = DOCS[S.docType] || DOCS.invoice, X = !!D.export, plan = taxPlan();
+  const cur = S.currency || "FX", xr = Number(S.exchangeRate) || 0;
+  const plain = v => Number(v || 0).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const money = X ? v => cur + " " + Number(v || 0).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : inr;
+  let taxRows = plan.error ? `<div><span>Tax</span><span class="err">${esc(plan.error)}</span></div>`
+    : X ? `<div><span>IGST</span><span>Nil (under LUT)</span></div>` : `<div><span>Tax</span><span>N/A</span></div>`, tax = 0;
+  if (plan.mode === "cgst_sgst") { // per line, in paise: CGST is half the line's tax rounded down, SGST gets the odd paisa
+    let c = 0, t = 0;
+    for (const i of items) { const p = Math.round(Math.round(i.amount * 100) * rate / 100); c += Math.trunc(p / 2); t += p; }
+    tax = t / 100;
+    taxRows = `<div><span>CGST @ ${rate/2}%</span><span>${inr(c / 100)}</span></div><div><span>${plan.ut ? "UTGST" : "SGST"} @ ${rate/2}%</span><span>${inr((t - c) / 100)}</span></div>`; }
+  if (plan.mode === "igst") { tax = sub * rate / 100; taxRows = `<div><span>IGST @ ${rate}%</span><span>${money(tax)}</span></div>`; }
   const total = sub + tax;
-  const spaced = v => inr(v).replace("₹", "₹ ");
-  const D = DOCS[S.docType] || DOCS.invoice;
-  const title = S.docType === "invoice" && S.taxMode !== "none" ? "TAX INVOICE" : D.title;
+  const spaced = v => X ? money(v) : inr(v).replace("₹", "₹ ");
+  const title = (S.docType === "invoice" && plan.mode !== "none") || X ? "TAX INVOICE" : D.title;
   const row = (k, v) => v ? `<div><b>${k}:</b> ${v}</div>` : "";
-  const qr = D.bank && S.upiQr && S.upiId ? upiQr(total, title) : "";
+  const qr = D.bank && !X && S.upiQr && S.upiId ? upiQr(total, title) : "";
+  const ps = placeState(), bareCode = /^\d{1,2}$/.test(String(S.place || "").trim());
+  const place = X && (!S.place || S.place === DEFAULTS.place) ? "Outside India" : bareCode && ps && ps.name ? `${ps.name} (${ps.code})` : S.place;
+  // Export: rupee equivalent. IGST is worked out on the rupee taxable value.
+  const inrSub = Math.round(sub * xr * 100) / 100, inrTax = plan.mode === "igst" ? Math.round(inrSub * rate) / 100 : 0;
+  const fx = X ? `<div class="fx"><div class="head"><span>Rupee equivalent at ₹${xr.toLocaleString("en-IN", { maximumFractionDigits: 4 })} per ${esc(cur)}</span><span>${esc(S.exchangeRateSource)}${S.exchangeRateSource ? ", " : ""}${fmtDate(S.exchangeRateDate || S.date)}</span></div>
+      <div><span>Taxable value</span><span>${inr(inrSub)}</span></div>
+      ${plan.mode === "igst" ? `<div><span>IGST @ ${rate}%</span><span>${inr(inrTax)}</span></div>` : ""}
+      <div><b>Total</b><b>${inr(inrSub + inrTax)}</b></div></div>` : "";
 
   document.getElementById("page").innerHTML = `
     <div class="hdr">
-      <div><div class="name">${esc(S.fromName)}</div><div class="addr">${esc(S.fromAddress)}</div></div>
-      <div class="title"><div class="t">${title}</div><div class="s">${esc(S.fromTag)}</div>${D.tag ? `<div class="s">${D.tag}</div>` : ""}</div>
+      <div><div class="name">${esc(S.fromName)}</div><div class="addr">${esc(S.fromAddress)}</div>${S.fromGstin ? `<div class="addr">GSTIN: ${esc(S.fromGstin)}</div>` : ""}</div>
+      <div class="title"><div class="t">${title}</div><div class="s">${esc(S.fromGstin && /^\s*unregistered\s*$/i.test(S.fromTag) ? "" : S.fromTag)}</div>${D.tag ? `<div class="s">${D.tag}</div>` : ""}</div>
     </div>
     <div class="parties">
-      <div><div class="sec">${D.to}</div><div class="billname">${esc(S.toName)}</div><div class="pre">${esc(S.toAddress)}</div>${S.toGstin ? `<div><b>GSTIN:</b> ${esc(S.toGstin)}</div>` : ""}</div>
+      <div><div class="sec">${D.to}</div><div class="billname">${esc(S.toName)}</div><div class="pre">${esc(S.toAddress)}</div>${S.toGstin ? `<div><b>GSTIN:</b> ${esc(S.toGstin)}</div>` : ""}${X ? `<div><b>Country of destination:</b> ${esc(S.buyerCountry)}</div>` : ""}</div>
       <div class="details"><div class="sec">${D.heading}</div>
         ${row(D.no, esc(S.invNo))}
         ${row("Date", fmtDate(S.date))}
         ${D.due ? row(D.due, fmtDate(S.due)) : ""}
         ${D.ref ? row("Against Invoice", esc(S.refInvoice) + (S.refDate ? " dated " + fmtDate(S.refDate) : "")) : ""}
         ${D.pay ? row("Payment Mode", esc(S.payMode)) + row("Reference", esc(S.payRef)) : ""}
-        ${row("Place of Supply", esc(S.place))}</div>
+        ${row("Place of Supply", esc(place))}
+        ${X && S.exportMode === "lut" && S.lut ? row("LUT ARN", esc(S.lut.arn) + (S.lut.fy ? ` (FY ${esc(S.lut.fy)})` : "")) : ""}</div>
     </div>
+    ${X && ENDORSE[S.exportMode] ? `<div class="endorse">${ENDORSE[S.exportMode]}</div>` : ""}
     <table class="items">
       <thead><tr><th class="l" style="width:5%">#</th><th class="c">Description</th><th class="c" style="width:11%">SAC</th>
-        <th class="c" style="width:7%">Qty</th><th class="c" style="width:9%">Unit</th><th class="r" style="width:16%">Rate</th><th class="r" style="width:17%">Amount</th></tr></thead>
+        <th class="c" style="width:7%">Qty</th><th class="c" style="width:9%">Unit</th><th class="r" style="width:16%">Rate${X ? ` (${esc(cur)})` : ""}</th><th class="r" style="width:17%">Amount${X ? ` (${esc(cur)})` : ""}</th></tr></thead>
       <tbody>${items.map((i, n) => `<tr><td class="l">${n+1}</td><td class="l">${esc(i.desc)}</td><td class="c">${esc(i.sac)}</td>
-        <td class="c">${esc(i.qty)}</td><td class="c">${esc(i.unit)}</td><td class="r">${inr(i.rate)}</td><td class="r">${inr(i.amount)}</td></tr>`).join("")}</tbody>
+        <td class="c">${esc(i.qty)}</td><td class="c">${esc(i.unit)}</td><td class="r">${X ? plain(i.rate) : inr(i.rate)}</td><td class="r">${X ? plain(i.amount) : inr(i.amount)}</td></tr>`).join("")}</tbody>
     </table>
     <div class="totals">
       <div><span>Subtotal</span><span>${spaced(sub)}</span></div>
       ${taxRows}
       <div class="grand"><span>${D.total || "Total"}</span><span>${spaced(total)}</span></div>
     </div>
-    <div class="words">${amountWords(total)}</div>
+    ${fx}
+    <div class="words">${X ? "Rupee equivalent: " + amountWords(inrSub + inrTax) : amountWords(total)}</div>
     ${S.notes ? `<div class="notes"><div class="sec">Notes</div><div class="pre">${esc(S.notes)}</div></div>` : ""}
     ${D.bank ? `<div class="bank"><div class="rows"><div class="sec">Bank Details</div>
       ${[["Account Name",S.bankName],["Bank",S.bank],["Account No.",S.acct],["IFSC",S.ifsc],["Payment Terms",S.terms]]
@@ -280,25 +361,34 @@ function renderItems() {
         <div><label>SAC</label><input data-i="${n}" data-f="sac" value="${esc(i.sac)}"></div>
         <div><label>Qty</label><input type="number" step="any" data-i="${n}" data-f="qty" value="${esc(i.qty)}"></div>
         <div><label>Unit</label><input data-i="${n}" data-f="unit" value="${esc(i.unit)}"></div>
-        <div><label>Rate (₹)</label><input type="number" step="any" data-i="${n}" data-f="rate" value="${esc(i.rate)}"></div>
+        <div><label>Rate (${S.docType === "export_invoice" ? esc(S.currency || "FX") : "₹"})</label><input type="number" step="any" data-i="${n}" data-f="rate" value="${esc(i.rate)}"></div>
       </div>
     </div>`).join("");
 }
 function addItem() { S.items.push({ desc:"", sac:"", qty:1, unit:"UNITS", rate:0 }); renderItems(); save(); render(); }
 function delItem(n) { S.items.splice(n, 1); renderItems(); save(); render(); }
 
+const getK = k => k.split(".").reduce((o, p) => o == null ? undefined : o[p], S);
+function setK(k, v) { // "lut.arn" sets S.lut.arn; an empty choice or number removes the field
+  const [a, b] = k.split(".");
+  if (b) S[a] = { ...(S[a] || {}), [b]: v };
+  else if (v === undefined) delete S[a]; else S[a] = v;
+}
 function fillForm() {
-  document.querySelectorAll("[data-k]").forEach(el => el.type === "checkbox" ? el.checked = !!S[el.dataset.k] : el.value = S[el.dataset.k] ?? "");
+  document.querySelectorAll("[data-k]").forEach(el => el.type === "checkbox" ? el.checked = !!getK(el.dataset.k) : el.value = getK(el.dataset.k) ?? "");
   renderItems(); showFields();
 }
 function showFields() { // only show the form fields the chosen document type uses
   const D = DOCS[S.docType] || DOCS.invoice;
-  for (const [cls, on] of [["when-due", D.due], ["when-ref", D.ref], ["when-pay", D.pay]])
+  for (const [cls, on] of [["when-due", D.due], ["when-ref", D.ref], ["when-pay", D.pay], ["when-export", D.export]])
     document.querySelectorAll("." + cls).forEach(el => el.style.display = on ? "" : "none");
 }
 function onEdit(e) {
   const el = e.target;
-  if (el.dataset.k) { S[el.dataset.k] = el.type === "checkbox" ? el.checked : el.value; showFields(); }
+  if (el.dataset.k) {
+    setK(el.dataset.k, el.type === "checkbox" ? el.checked : (el.type === "number" || el.tagName === "SELECT") && el.value === "" ? undefined
+      : el.type === "number" ? Number(el.value) : el.value);
+    showFields(); if (el.dataset.k === "docType" || el.dataset.k === "currency") renderItems(); }
   else if (el.dataset.i) S.items[+el.dataset.i][el.dataset.f] = el.value;
   else return;
   save(); render();

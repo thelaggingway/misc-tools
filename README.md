@@ -46,7 +46,7 @@ Re-run `setup.mjs` too if you move the workspace to another computer (it records
 
 | Tool | Makes | Agent skill |
 |---|---|---|
-| [invoice-generator](invoice-generator/) | Invoice, proforma, quotation, payment receipt, credit note, debit note (A4 PDF, GST, amount in words, UPI QR) | `misc-tools-invoices` |
+| [invoice-generator](invoice-generator/) | Invoice, export invoice (services, foreign currency, LUT/IGST), proforma, quotation, payment receipt, credit note, debit note (A4 PDF, automatic CGST/SGST or IGST, next number in a series, amount in words, UPI QR) | `misc-tools-invoices` |
 | [receivables](receivables/) | Who owes what: unpaid and part-paid invoices by age, TDS deducted per client per year (for Form 26AS/AIS), FEMA deadlines for exports, draft reminders | `misc-tools-receivables` |
 | (intake) | Client and profile files from a screenshot or text, with GSTIN/PAN/IFSC/PIN checks | `misc-tools-client-intake` |
 | [salary-slip](salary-slip/) | Monthly wage slip: days paid, earnings, PF/ESI/professional tax from the dated rules, net in words (A4 PDF) | `misc-tools-salary-slip` |

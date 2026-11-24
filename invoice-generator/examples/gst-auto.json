@@ -1,0 +1,13 @@
+{
+  "invNo": "EXAMPLE/2627/02",
+  "date": "2026-11-24",
+  "due": "2026-12-24",
+  "toName": "Example Retail LLP",
+  "toAddress": "2nd Floor, 10 Sample Road\nJayanagar\nBengaluru\nKarnataka 560011",
+  "place": "29",
+  "items": [
+    { "desc": "Business consulting", "sac": "998312", "qty": 1, "unit": "UNITS", "rate": 1000.05 },
+    { "desc": "Strategy workshop", "sac": "998312", "qty": 3, "unit": "UNITS", "rate": 333.33 }
+  ],
+  "taxMode": "auto"
+}

@@ -1,0 +1,20 @@
+{
+  "docType": "export_invoice",
+  "invNo": "EXP/2627/03",
+  "date": "2026-11-24",
+  "due": "2026-12-24",
+  "toName": "Placeholder Inc",
+  "toAddress": "0 Example Avenue\nWilmington, DE 19801\nUnited States",
+  "buyerCountry": "United States",
+  "place": "Outside India",
+  "currency": "USD",
+  "exchangeRate": 84.25,
+  "exchangeRateSource": "RBI reference rate",
+  "exchangeRateDate": "2026-11-24",
+  "exportMode": "lut",
+  "lut": { "arn": "AD2904260000000", "fy": "2026-27" },
+  "items": [
+    { "desc": "Business consulting, November", "sac": "998312", "qty": 1, "unit": "UNITS", "rate": 3000 },
+    { "desc": "Workshop", "sac": "998312", "qty": 4, "unit": "DAYS", "rate": 450 }
+  ]
+}

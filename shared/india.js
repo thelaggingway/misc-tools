@@ -61,3 +61,24 @@
   if (typeof module === "object" && module.exports) module.exports = api;
   else Object.assign(root, api);
 })(this);
+
+// GST state lookup. entries come from rules/gst-state-codes.json (loadRules in Node; invoice-generator/cli.mjs
+// injects them into the page). Accepts "29", "Karnataka", "29-Karnataka" or "Karnataka (29)", any case, and the
+// entries' aliases. Returns the matching entry, or null when nothing matches or a code and a name disagree.
+(function (root) {
+  const norm = s => String(s).toLowerCase().replace(/&/g, " and ").replace(/[^a-z0-9]+/g, " ").trim();
+  function gstStateOf(value, entries) {
+    const v = String(value ?? "").trim();
+    if (!v || !entries) return null;
+    const m = v.match(/^(\d{1,2})(?!\d)\s*[-:–]?\s*(.*)$/) || v.match(/^(.*?)\s*\((\d{1,2})\)$/);
+    const [code, name] = !m ? [null, v] : /^\d/.test(m[1]) ? [m[1], m[2]] : [m[2], m[1]];
+    const names = e => [e.name, ...(e.aliases || [])].map(norm);
+    if (code) {
+      const e = entries.find(x => x.code === code.padStart(2, "0"));
+      return e && (!name || names(e).includes(norm(name))) ? e : null;
+    }
+    return entries.find(e => names(e).includes(norm(name))) || null;
+  }
+  if (typeof module === "object" && module.exports) module.exports.gstStateOf = gstStateOf;
+  else root.gstStateOf = gstStateOf;
+})(this);
