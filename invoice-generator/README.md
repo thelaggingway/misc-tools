@@ -9,15 +9,19 @@ Open `index.html` in a browser. Fill in the form; the A4 preview updates live.
 Export/Import JSON saves a copy of an invoice to reuse later.
 
 ## Agents and scripts
+In a workspace made by `setup.mjs`, agents follow the `misc-tools-invoices` skill. Directly:
 ```sh
-node invoice-generator/cli.mjs [profile.json] invoice.json -o out.pdf
+node invoice-generator/cli.mjs profiles/me.json clients/acme.json documents/acme/INV_2627_01.json -o out.pdf
+node invoice-generator/cli.mjs ... --check      # validate only
+node invoice-generator/cli.mjs --schema         # JSON Schema for the input
 echo '{"invNo":"INV/1","items":[{"desc":"Design","rate":5000}]}' | node invoice-generator/cli.mjs - -o out.pdf
 ```
-- JSON files merge left to right, so keep your fixed details (seller, client, bank) in a profile file and
-  pass only what changes per invoice. Missing fields use the template's defaults.
+- JSON files merge left to right: seller profile, then client, then the document's own fields.
+  Missing fields use the template's defaults. Keys starting with `$` (like `$schema`) are ignored.
 - Needs Node 18+ and Chrome/Chromium (set `CHROME_PATH` if it is not found). No npm install.
-- Prints the PDF path on success; exits 1 with a message naming the bad field on invalid input.
-- Unknown fields are rejected, so a typo fails loudly instead of silently disappearing.
+- Prints the PDF path on success. On bad input it exits 1 and names every bad field, e.g.
+  `items[0].rate: "abc" does not match a number`; unknown fields are rejected so typos fail loudly.
+- `toGstin` is checked with its check digit; this catches typos, not whether the GSTIN is active.
 
 ## JSON fields
 | Field | Meaning |
@@ -25,6 +29,7 @@ echo '{"invNo":"INV/1","items":[{"desc":"Design","rate":5000}]}' | node invoice-
 | `fromName`, `fromAddress` | Seller name and one-line address |
 | `fromTag` | Text under "INVOICE", e.g. `UNREGISTERED` or `GSTIN: 23ABCDE1234F1Z5` |
 | `toName`, `toAddress` | Client name; address with `\n` between lines |
+| `toGstin` | Client GSTIN, shown under the address; required on a tax invoice to a registered buyer |
 | `invNo`, `place` | Invoice number, place of supply |
 | `date`, `due` | `YYYY-MM-DD` |
 | `items` | Array of `{ desc, sac, qty, unit, rate }`; amount = qty × rate |

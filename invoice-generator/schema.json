@@ -1,0 +1,183 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Invoice generator input",
+  "description": "Every field is optional; missing ones fall back to the template defaults. Files passed to the CLI merge left to right (seller profile, client, document).",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "docType": {
+      "enum": [
+        "invoice",
+        "proforma",
+        "quotation",
+        "receipt",
+        "credit_note",
+        "debit_note"
+      ],
+      "description": "Document type; decides the title and which sections show"
+    },
+    "fromName": {
+      "type": "string",
+      "description": "Seller name"
+    },
+    "fromAddress": {
+      "type": "string",
+      "description": "Seller address on one line"
+    },
+    "fromTag": {
+      "type": "string",
+      "description": "Text under the title, e.g. UNREGISTERED or GSTIN: 23ABCDE1234F1Z5"
+    },
+    "toName": {
+      "type": "string",
+      "description": "Client name"
+    },
+    "toAddress": {
+      "type": "string",
+      "description": "Client address, lines separated by \\n"
+    },
+    "toGstin": {
+      "type": "string",
+      "description": "Client GSTIN, if the client is GST-registered; checked with its check digit"
+    },
+    "invNo": {
+      "type": "string",
+      "description": "Document number, e.g. INV/2627/01; never reuse one"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Document date, YYYY-MM-DD"
+    },
+    "due": {
+      "type": "string",
+      "pattern": "^$|^\\d{4}-\\d{2}-\\d{2}$",
+      "description": "a date as YYYY-MM-DD, or empty"
+    },
+    "place": {
+      "type": "string",
+      "description": "Place of supply (state name)"
+    },
+    "items": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "desc",
+          "rate"
+        ],
+        "properties": {
+          "desc": {
+            "type": "string",
+            "description": "Description"
+          },
+          "sac": {
+            "type": "string",
+            "description": "SAC (services) or HSN (goods) code"
+          },
+          "qty": {
+            "type": [
+              "number",
+              "string"
+            ],
+            "pattern": "^-?\\d+(\\.\\d+)?$",
+            "description": "a number"
+          },
+          "unit": {
+            "type": "string",
+            "description": "Unit, e.g. UNITS, DAYS, MONTHS"
+          },
+          "rate": {
+            "type": [
+              "number",
+              "string"
+            ],
+            "pattern": "^-?\\d+(\\.\\d+)?$",
+            "description": "a number"
+          }
+        }
+      }
+    },
+    "taxMode": {
+      "enum": [
+        "none",
+        "cgst_sgst",
+        "igst"
+      ],
+      "description": "none prints Tax N/A; cgst_sgst splits taxRate in half; igst charges taxRate"
+    },
+    "taxRate": {
+      "type": [
+        "number",
+        "string"
+      ],
+      "pattern": "^\\d+(\\.\\d+)?$",
+      "description": "Total GST percent, default 18"
+    },
+    "bankName": {
+      "type": "string",
+      "description": "Bank account name"
+    },
+    "bank": {
+      "type": "string",
+      "description": "Bank name"
+    },
+    "acct": {
+      "type": "string",
+      "description": "Account number"
+    },
+    "ifsc": {
+      "type": "string",
+      "pattern": "^$|^[A-Z]{4}0[A-Z0-9]{6}$",
+      "description": "an 11-character IFSC like ICIC0001190, or empty"
+    },
+    "terms": {
+      "type": "string",
+      "description": "Payment terms"
+    },
+    "refInvoice": {
+      "type": "string",
+      "description": "Original invoice number (receipts, credit and debit notes)"
+    },
+    "refDate": {
+      "type": "string",
+      "pattern": "^$|^\\d{4}-\\d{2}-\\d{2}$",
+      "description": "a date as YYYY-MM-DD, or empty"
+    },
+    "payMode": {
+      "type": "string",
+      "description": "Payment mode, e.g. UPI, NEFT, Cash (receipts)"
+    },
+    "payRef": {
+      "type": "string",
+      "description": "Payment reference / UTR (receipts)"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Free text below the amount in words"
+    },
+    "upiQr": {
+      "type": "boolean",
+      "description": "Show a pay-by-UPI QR (invoices, proformas, debit notes); needs upiId"
+    },
+    "upiId": {
+      "type": "string",
+      "pattern": "^$|^[\\w.-]{2,256}@[a-zA-Z][\\w.-]{1,63}$",
+      "description": "a UPI ID like name@okicici, or empty"
+    },
+    "upiName": {
+      "type": "string",
+      "description": "Payee name in the UPI app; defaults to fromName"
+    },
+    "footer": {
+      "type": "string",
+      "description": "Footer note"
+    },
+    "signName": {
+      "type": "string",
+      "description": "Signatory name"
+    }
+  }
+}
