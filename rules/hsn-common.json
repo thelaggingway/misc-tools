@@ -1,0 +1,443 @@
+{
+  "name": "hsn-common",
+  "description": "HSN codes for goods a small Indian shop or trading business commonly sells, with the GST rate on each, from Notification 9/2025-Central Tax (Rate) dated 17 September 2025 (GST 2.0). Rates are total GST: the notification states central tax (2.5 means 5% GST, 9 means 18% GST). Later amendments to that notification were checked - 19/2025 (tobacco, from 1 February 2026), 01/2026 (beverages, from 1 May 2026) and 02/2026 (fertilisers and tyres, from 1 November 2026) - and none of them touches an entry here. Goods not listed in Schedule I, III, IV, V or VI of the notification fall in Schedule II at 18% (serial 639, the residuary entry). Deliberately small: each entry was read in the notification itself. Coverage runs to the end of FY 2026-27 because nothing further is notified for it; re-check after any GST Council meeting.",
+  "coverage": { "from": "2025-09-22", "to": "2027-03-31" },
+  "checked_on": "2026-11-24",
+  "sources": [
+    {
+      "id": "goods2025",
+      "title": "Notification 9/2025-Central Tax (Rate) dated 17 September 2025, effective 22 September 2025",
+      "url": "https://egazette.gov.in/WriteReadData/2025/266209.pdf",
+      "notes": "Replaces the 2017 goods rate notification. Schedule I is 2.5% central tax (5% GST), Schedule II 9% (18%), Schedule III 20% (40%), Schedule IV 1.5% (3%), Schedule V 0.125%, Schedule VI 0.75%. Gazette G.S.R. 641(E)."
+    },
+    {
+      "id": "goods2026b",
+      "title": "Notification 02/2026-Central Tax (Rate) dated 27 October 2026, effective 1 November 2026",
+      "url": "https://egazette.gov.in/WriteReadData/2026/277454.pdf",
+      "notes": "Checked: changes only fertilisers (Schedule I, S. No. 237) and tyres (4012 added to Schedule I, other tyres reworded in Schedule II), from 1 November 2026. Its closing note records 01/2026 as the previous amendment to 9/2025. No entry below is affected. Gazette G.S.R. 921(E)."
+    }
+  ],
+  "entries": [
+    {
+      "hsn": "0901",
+      "description": "Coffee roasted, whether or not decaffeinated; coffee husks and skins; coffee substitutes containing coffee in any proportion [other than coffee beans not roasted]",
+      "rate": 5,
+      "schedule": "Schedule I (2.5% central tax)",
+      "search": ["coffee", "coffee powder", "kaapi", "roasted beans"],
+      "source": "goods2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "hsn": "0902",
+      "description": "Tea, whether or not flavoured [other than unprocessed green leaves of tea]",
+      "rate": 5,
+      "schedule": "Schedule I (2.5% central tax)",
+      "search": ["tea", "chai", "chai patti", "green tea", "tea bags"],
+      "source": "goods2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "hsn": "1006",
+      "description": "Rice, pre-packaged and labelled",
+      "rate": 5,
+      "schedule": "Schedule I (2.5% central tax)",
+      "search": ["rice", "chawal", "basmati", "sona masoori"],
+      "source": "goods2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null,
+      "note": "The 5% entry is for pre-packaged and labelled rice; loose rice sold unpacked is not covered by this entry."
+    },
+    {
+      "hsn": "1101",
+      "description": "Wheat or meslin flour, pre-packaged and labelled",
+      "rate": 5,
+      "schedule": "Schedule I (2.5% central tax)",
+      "search": ["atta", "flour", "maida", "wheat flour", "gehun"],
+      "source": "goods2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "hsn": "1701",
+      "description": "Cane or beet sugar and chemically pure sucrose, in solid form including refined sugar containing added flavouring or colouring matter, sugar cubes [other than jaggery of all types, khandsari sugar, rab]",
+      "rate": 5,
+      "schedule": "Schedule I (2.5% central tax)",
+      "search": ["sugar", "cheeni", "shakkar", "sugar cubes"],
+      "source": "goods2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "hsn": "1902",
+      "description": "Seviyan (vermicelli); pasta, whether or not cooked or stuffed, such as spaghetti, macaroni, noodles, lasagne, gnocchi, ravioli, cannelloni; couscous",
+      "rate": 5,
+      "schedule": "Schedule I (2.5% central tax)",
+      "search": ["pasta", "noodles", "vermicelli", "seviyan", "macaroni"],
+      "source": "goods2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "hsn": "1905",
+      "description": "Pastry, cakes, biscuits and other bakers' wares, whether or not containing cocoa; un-fried or un-cooked snack pellets made by extrusion; extruded or expanded savoury or salted products",
+      "rate": 5,
+      "schedule": "Schedule I (2.5% central tax)",
+      "search": ["biscuits", "biscuit", "cookies", "cake", "pastry", "rusk", "namkeen pellets"],
+      "source": "goods2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "hsn": "2106 90",
+      "description": "Namkeens, bhujia, mixture, chabena and similar edible preparations in ready for consumption form, whether or not pre-packaged and labelled",
+      "rate": 5,
+      "schedule": "Schedule I (2.5% central tax)",
+      "search": ["namkeen", "bhujia", "mixture", "chabena", "farsan", "snacks"],
+      "source": "goods2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null,
+      "note": "Pan masala (2106 90 20) is 40% and is not this entry."
+    },
+    {
+      "hsn": "3004",
+      "description": "Medicaments for therapeutic or prophylactic uses, put up in measured doses or in forms or packings for retail sale, including Ayurvedic, Unani, homoeopathic, siddha or bio-chemic medicaments",
+      "rate": 5,
+      "schedule": "Schedule I (2.5% central tax)",
+      "search": ["medicine", "tablets", "dawa", "pharmacy", "ayurvedic medicine", "syrup"],
+      "source": "goods2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "hsn": "3305",
+      "description": "Hair oil, shampoo",
+      "rate": 5,
+      "schedule": "Schedule I (2.5% central tax)",
+      "search": ["hair oil", "shampoo", "tel", "sarson oil for hair"],
+      "source": "goods2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null,
+      "note": "Other hair preparations (dyes, creams, gels) are 18% under Schedule II, S. No. 62."
+    },
+    {
+      "hsn": "3306",
+      "description": "Toothpaste",
+      "rate": 5,
+      "schedule": "Schedule I (2.5% central tax)",
+      "search": ["toothpaste", "tooth powder", "manjan", "dental floss", "toothbrush paste"],
+      "source": "goods2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null,
+      "note": "Tooth powder and dental floss are separate 5% entries in the same schedule; other oral hygiene preparations are 18%."
+    },
+    {
+      "hsn": "3307 41 00",
+      "description": "Agarbatti, lobhan, dhoop batti, dhoop, sambraani",
+      "rate": 5,
+      "schedule": "Schedule I (2.5% central tax)",
+      "search": ["agarbatti", "incense", "dhoop", "lobhan", "sambrani"],
+      "source": "goods2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "hsn": "3401",
+      "description": "Toilet soap (other than industrial soap) in the form of bars, cakes, moulded pieces or shapes",
+      "rate": 5,
+      "schedule": "Schedule I (2.5% central tax)",
+      "search": ["soap", "sabun", "toilet soap", "bathing soap"],
+      "source": "goods2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null,
+      "note": "Soap other than toilet soap, and liquid or cream skin-washing preparations, are 18% under Schedule II, S. No. 66."
+    },
+    {
+      "hsn": "4819 10, 4819 20",
+      "description": "Cartons, boxes and cases of corrugated or non-corrugated paper or paper board",
+      "rate": 5,
+      "schedule": "Schedule I (2.5% central tax)",
+      "search": ["carton", "box", "packing box", "corrugated box", "dabba"],
+      "source": "goods2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "hsn": "4901",
+      "description": "Brochures, leaflets and similar printed matter, whether or not in single sheets",
+      "rate": 5,
+      "schedule": "Schedule I (2.5% central tax)",
+      "search": ["brochure", "leaflet", "pamphlet", "printed matter", "parcha"],
+      "source": "goods2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null,
+      "note": "Books and other printed products are in the exemption notification 10/2025-Central Tax (Rate); check it before billing books."
+    },
+    {
+      "hsn": "5208 to 5212",
+      "description": "Woven fabrics of cotton",
+      "rate": 5,
+      "schedule": "Schedule I (2.5% central tax)",
+      "search": ["cotton fabric", "kapda", "cloth", "fabric"],
+      "source": "goods2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "hsn": "61",
+      "description": "Articles of apparel and clothing accessories, knitted or crocheted, of sale value not exceeding Rs 2500 per piece",
+      "rate": 5,
+      "schedule": "Schedule I (2.5% central tax)",
+      "search": ["t-shirt", "tshirt", "knitted", "cap", "socks", "garment"],
+      "source": "goods2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "hsn": "61",
+      "description": "Articles of apparel and clothing accessories, knitted or crocheted, of sale value exceeding Rs 2500 per piece",
+      "rate": 18,
+      "schedule": "Schedule II (9% central tax)",
+      "search": ["t-shirt", "knitted", "garment", "jacket", "sweater"],
+      "source": "goods2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null,
+      "note": "The rate turns on the sale value per piece (Rs 2500), not on the material. Chapter 62 (not knitted) has the same two-tier split."
+    },
+    {
+      "hsn": "6601",
+      "description": "Umbrellas and sun umbrellas (including walking-stick umbrellas, garden umbrellas and similar umbrellas)",
+      "rate": 5,
+      "schedule": "Schedule I (2.5% central tax)",
+      "search": ["umbrella", "chhata", "raincoat umbrella"],
+      "source": "goods2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "hsn": "7323",
+      "description": "Table, kitchen or other household articles of iron and steel; utensils",
+      "rate": 5,
+      "schedule": "Schedule I (2.5% central tax)",
+      "search": ["utensils", "bartan", "steel plate", "kadhai", "tawa", "household steel"],
+      "source": "goods2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null,
+      "note": "Iron or steel wool and pot scourers of the same heading are 18% under Schedule II, S. No. 301."
+    },
+    {
+      "hsn": "8712",
+      "description": "Bicycles and other cycles (including delivery tricycles), not motorised",
+      "rate": 5,
+      "schedule": "Schedule I (2.5% central tax)",
+      "search": ["bicycle", "cycle", "scooter for child", "tricycle"],
+      "source": "goods2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "hsn": "9004",
+      "description": "Spectacles, corrective (including goggles for correcting vision)",
+      "rate": 5,
+      "schedule": "Schedule I (2.5% central tax)",
+      "search": ["spectacles", "chashma", "glasses", "corrective lens", "goggles"],
+      "source": "goods2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null,
+      "note": "Spectacles and goggles other than corrective are 18% under Schedule II, S. No. 558."
+    },
+    {
+      "hsn": "9403",
+      "description": "Furniture wholly made of bamboo, cane or rattan",
+      "rate": 5,
+      "schedule": "Schedule I (2.5% central tax)",
+      "search": ["bamboo furniture", "cane furniture", "rattan", "baans"],
+      "source": "goods2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "hsn": "9403",
+      "description": "Other furniture (other than furniture wholly made of bamboo, cane or rattan) and parts thereof",
+      "rate": 18,
+      "schedule": "Schedule II (9% central tax)",
+      "search": ["furniture", "chair", "table", "almirah", "sofa", "bed"],
+      "source": "goods2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "hsn": "9503",
+      "description": "Toys like tricycles, scooters, pedal cars etc. (including parts and accessories thereof) [other than electronic toys]",
+      "rate": 5,
+      "schedule": "Schedule I (2.5% central tax)",
+      "search": ["toys", "khilona", "tricycle", "pedal car", "doll"],
+      "source": "goods2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "hsn": "9503",
+      "description": "Electronic toys like tricycles, scooters, pedal cars etc. (including parts and accessories thereof)",
+      "rate": 18,
+      "schedule": "Schedule II (9% central tax)",
+      "search": ["electronic toys", "remote car", "battery toy", "khilona"],
+      "source": "goods2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "hsn": "9603 21 00",
+      "description": "Tooth brushes including dental-plate brushes",
+      "rate": 5,
+      "schedule": "Schedule I (2.5% central tax)",
+      "search": ["toothbrush", "brush", "dental brush"],
+      "source": "goods2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "hsn": "3402",
+      "description": "Organic surface-active agents (other than soap); washing preparations (including auxiliary washing preparations) and cleaning preparations, other than those of heading 3401 [other than sulphonated castor oil, fish oil or sperm oil]",
+      "rate": 18,
+      "schedule": "Schedule II (9% central tax)",
+      "search": ["detergent", "washing powder", "surf", "cleaning liquid", "dishwash"],
+      "source": "goods2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "hsn": "3924",
+      "description": "Tableware, kitchenware, other household articles and hygienic or toilet articles, of plastics",
+      "rate": 18,
+      "schedule": "Schedule II (9% central tax)",
+      "search": ["plastic bucket", "plastic box", "plastic kitchenware", "plastic mug", "tiffin"],
+      "source": "goods2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "hsn": "4820",
+      "description": "Registers, account books, order books, receipt books, letter pads, memorandum pads, diaries and similar articles, binders, folders, file covers, business forms, of paper or paperboard [other than note books and exercise books]",
+      "rate": 18,
+      "schedule": "Schedule II (9% central tax)",
+      "search": ["register", "account book", "receipt book", "diary", "file folder", "stationery"],
+      "source": "goods2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null,
+      "note": "Note books and exercise books are carved out of this entry and have their own entry; check the schedules for 4820 20 before billing them."
+    },
+    {
+      "hsn": "6403",
+      "description": "Footwear with outer soles of rubber, plastics, leather or composition leather and uppers of leather",
+      "rate": 18,
+      "schedule": "Schedule II (9% central tax)",
+      "search": ["footwear", "shoes", "joota", "leather shoes", "chappal"],
+      "source": "goods2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null,
+      "note": "Footwear of textile uppers (6404) and other footwear (6405) are also 18%, at S. Nos. 205 and 206."
+    },
+    {
+      "hsn": "8301",
+      "description": "Padlocks and locks (key, combination or electrically operated), of base metal; clasps and frames with clasps, incorporating locks; keys for any of the foregoing articles",
+      "rate": 18,
+      "schedule": "Schedule II (9% central tax)",
+      "search": ["lock", "padlock", "taala", "keys"],
+      "source": "goods2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "hsn": "7318",
+      "description": "Screws, bolts, nuts, coach screws, screw hooks, rivets, cotters, cotter-pins, washers (including spring washers) and similar articles, of iron or steel",
+      "rate": 18,
+      "schedule": "Schedule II (9% central tax)",
+      "search": ["screws", "bolts", "nuts", "hardware", "washer", "pech"],
+      "source": "goods2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "hsn": "8414",
+      "description": "Air or vacuum pumps, air or other gas compressors and fans; ventilating or recycling hoods incorporating a fan, whether or not fitted with filters; gas-tight biological safety cabinets [other than bicycle pumps, other hand pumps and parts of air or vacuum pumps and compressors of bicycle pumps]",
+      "rate": 18,
+      "schedule": "Schedule II (9% central tax)",
+      "search": ["fan", "ceiling fan", "exhaust fan", "pump", "compressor", "pankha"],
+      "source": "goods2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "hsn": "8471",
+      "description": "Automatic data processing machines and units thereof (computers, laptops and their units); magnetic or optical readers, machines for transcribing data onto data media in coded form and machines for processing such data, not elsewhere specified or included",
+      "rate": 18,
+      "schedule": "Schedule II (9% central tax)",
+      "search": ["computer", "laptop", "desktop", "PC", "printer", "hard disk"],
+      "source": "goods2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "hsn": "8509",
+      "description": "Electro-mechanical domestic appliances, with self-contained electric motor, other than vacuum cleaners of heading 8508",
+      "rate": 18,
+      "schedule": "Schedule II (9% central tax)",
+      "search": ["mixer", "grinder", "mixie", "juicer", "food processor", "blender"],
+      "source": "goods2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "hsn": "8517",
+      "description": "All goods of heading 8517 (telephone sets, smartphones, routers and other apparatus for the transmission or reception of data)",
+      "rate": 18,
+      "schedule": "Schedule II (9% central tax)",
+      "search": ["mobile", "phone", "smartphone", "router", "sim", "charger for phone"],
+      "source": "goods2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "hsn": "8536",
+      "description": "Electrical apparatus for switching or protecting electrical circuits or for making connections to or in electrical circuits (switches, relays, fuses, surge suppressors, plugs, sockets, lampholders and other connectors, junction boxes), for a voltage not exceeding 1,000 volts",
+      "rate": 18,
+      "schedule": "Schedule II (9% central tax)",
+      "search": ["switch", "socket", "plug", "MCB", "fuse", "board"],
+      "source": "goods2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "hsn": "8539",
+      "description": "Electrical filament or discharge lamps including sealed beam lamp units and ultra-violet or infra-red lamps; arc lamps",
+      "rate": 18,
+      "schedule": "Schedule II (9% central tax)",
+      "search": ["LED bulb", "bulb", "lamp", "tube light", "batten"],
+      "source": "goods2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "hsn": "8544",
+      "description": "Insulated (including enamelled or anodised) wire, cable and other insulated electric conductors, whether or not fitted with connectors; optical fibre cables",
+      "rate": 18,
+      "schedule": "Schedule II (9% central tax)",
+      "search": ["wire", "cable", "taar", "electric wire", "flexible cable"],
+      "source": "goods2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    },
+    {
+      "hsn": "9608",
+      "description": "Ball point pens; felt tipped and other porous-tipped pens and markers; fountain pens; stylograph pens and other pens; pen and pencil holders; parts of the foregoing",
+      "rate": 18,
+      "schedule": "Schedule II (9% central tax)",
+      "search": ["pen", "ball pen", "marker", "stationery", "kalam"],
+      "source": "goods2025",
+      "effective_from": "2025-09-22",
+      "effective_to": null
+    }
+  ]
+}
