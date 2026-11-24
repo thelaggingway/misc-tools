@@ -307,7 +307,7 @@ for (const ev of ["input", "change"]) document.getElementById("f").addEventListe
 
 function downloadPdf() {
   const old = document.title;
-  document.title = (S.invNo || "invoice").replace(/[\/\\]/g, "_"); // default file name e.g. TATVARTH_2627_01.pdf
+  document.title = (S.invNo || "invoice").replace(/[\/\\]/g, "_"); // default file name e.g. INV_2627_01.pdf
   window.print(); document.title = old;
 }
 function exportJson() {
