@@ -91,10 +91,14 @@ function checkDoc(d) {
       console.error(`warning: taxMode ${d.taxMode} but the seller is in ${seller.name} and the place of supply is ${p.name}; taxMode auto would pick ${p.code === seller.code ? "cgst_sgst" : "igst"}`);
   }
   if (X) {
-    for (const k of ["fromGstin", "currency", "exchangeRate", "exchangeRateSource", "buyerCountry", "exportMode"])
+    // An unregistered seller issues a plain invoice: no Rule 46 endorsement, LUT or IGST, but still the rupee value.
+    const registered = !!d.fromGstin, lutSet = d.lut && Object.values(d.lut).some(v => v);
+    for (const k of ["currency", "exchangeRate", "exchangeRateSource", "exchangeRateDate", "buyerCountry", ...(registered ? ["exportMode"] : [])])
       if (d[k] === undefined || d[k] === "") errs.push(`${k}: is required on an export invoice`);
     if (d.exchangeRate === 0) errs.push("exchangeRate: must be more than 0");
-    if (d.exportMode === "lut") {
+    if (!registered && (d.exportMode || lutSet))
+      errs.push(`${d.exportMode ? "exportMode" : "lut"}: remove it; the Rule 46 export endorsement and a Letter of Undertaking apply only to GST-registered sellers (set fromGstin if you are registered)`);
+    if (registered && d.exportMode === "lut") {
       if (!d.lut?.arn || !d.lut?.fy) errs.push("lut: exportMode lut needs lut.arn and lut.fy");
       else if (d.lut.fy !== fyLong(date)) errs.push(`lut.fy: is ${d.lut.fy} but the invoice is dated in ${fyLong(date)}; an LUT is valid only for the financial year it is furnished for (CBIC Circular 8/8/2017-GST)`);
     }

@@ -46,9 +46,6 @@ as-of date are left out.
 | `tdsSection` | client file or receipt | Rule id the client deducts under: `professional_fees`, `technical_fees`, `contractor`, `commission`, `rent_plant_machinery`, `rent_land_building`, `rent_by_individual`, `paid_by_individual` |
 | `currency`, `exchangeRate`, `buyerCountry` | export invoice (or its client file) | Invoice currency (default INR), rupees per unit, buyer's country. A receipt in rupees against a foreign-currency invoice is converted at its own `exchangeRate`, else the invoice's |
 
-**Note:** `invoice-generator/schema.json` does not accept `tds` and `tdsSection` yet, so its `--check` rejects
-receipts and client files that use them until that schema adds the two fields.
-
 ## TDS check
 The TDS base is the invoice value without GST (CBDT Circular 23/2017, when GST is shown separately), so a
 receipt's base is (received + TDS) × taxable value ÷ invoice total. With `tdsSection` set, the check compares

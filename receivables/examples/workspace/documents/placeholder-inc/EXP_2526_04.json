@@ -4,6 +4,8 @@
   "date": "2026-03-15",
   "due": "2026-04-14",
   "exchangeRate": 86,
+  "exchangeRateSource": "Bank buying rate (example)",
+  "exchangeRateDate": "2026-03-15",
   "items": [
     {
       "desc": "UX research, February",

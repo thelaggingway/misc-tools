@@ -24,8 +24,7 @@ When the owner says a client paid, make a receipt with the misc-tools-invoices s
 receipt's JSON; the invoice then counts as settled by amount received + TDS. If you know which section the client
 deducts under, set `tdsSection` in `clients/<client>.json` (ids: `professional_fees`, `technical_fees`,
 `contractor`, `commission`, `rent_plant_machinery`, `rent_land_building`, `rent_by_individual`,
-`paid_by_individual`). Note: until invoice-generator's schema accepts `tds` and `tdsSection`, its `--check`
-rejects those fields; render the receipt PDF without them, then add them to the JSON.
+`paid_by_individual`).
 
 ## Reminders: draft, never send
 The report has one WhatsApp draft and one email draft per client with overdue invoices. Show them to the owner,

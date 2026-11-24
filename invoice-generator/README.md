@@ -48,7 +48,10 @@ In the browser, the state list loads when the page is served over http; opened a
 a state code.
 
 ## Export invoice (`docType: "export_invoice"`)
-A tax invoice for export of services. Item rates are in `currency`; the totals show the amount in that currency
+An invoice for export of services. With `fromGstin` it is a TAX INVOICE as below; without it (an unregistered
+seller) it is a plain INVOICE: currency amounts, rupee equivalent and country of destination, but no
+endorsement, LUT line or IGST row, and `exportMode`/`lut` are rejected because they apply only to GST-registered
+sellers. Item rates are in `currency`; the totals show the amount in that currency
 and its rupee equivalent at `exchangeRate`, with the rate's source and date. It prints the endorsement from the
 second proviso to CGST Rule 46, word for word:
 - `exportMode: "lut"`: "SUPPLY MEANT FOR EXPORT/SUPPLY TO SEZ UNIT OR SEZ DEVELOPER FOR AUTHORISED OPERATIONS
@@ -57,8 +60,9 @@ second proviso to CGST Rule 46, word for word:
   OPERATIONS ON PAYMENT OF INTEGRATED TAX", with IGST at `taxRate` (computed on the rupee value too).
 
 Source: https://taxinformation.cbic.gov.in/content/html/tax_repository/gst/rules/cgst_rules/active/chapter6/rule46_v1.00.html
-(read 2026-11-24). Required: `fromGstin`, `currency`, `exchangeRate`, `exchangeRateSource`, `buyerCountry`,
-`exportMode`, and for `lut` both `lut.arn` and `lut.fy`; `lut.fy` must be the invoice's financial year (an LUT is
+(read 2026-11-24). Required on every export invoice: `currency`, `exchangeRate`, `exchangeRateSource`,
+`exchangeRateDate` and `buyerCountry` (the rupee value is needed for FEMA and income tax even without GST).
+Registered sellers also need `exportMode`, and for `lut` both `lut.arn` and `lut.fy`; `lut.fy` must be the invoice's financial year (an LUT is
 valid for the financial year it is furnished for, CBIC Circular 8/8/2017-GST). `taxMode` is ignored; the UPI QR is
 not shown. `place` defaults to "Outside India".
 
@@ -82,7 +86,7 @@ not shown. `place` defaults to "Outside India".
 | `payMode`, `payRef` | Payment mode (UPI, NEFT, cash) and UTR; shown on receipts |
 | `notes` | Free text below the amount in words, e.g. the reason for a credit note |
 | `currency`, `exchangeRate`, `exchangeRateSource`, `exchangeRateDate` | Export invoices: currency code, rupees per unit, where the rate is from and its date |
-| `buyerCountry`, `exportMode`, `lut` | Export invoices: country of destination; `lut` or `igst_paid`; `{ "arn", "fy" }` of the Letter of Undertaking |
+| `buyerCountry`, `exportMode`, `lut` | Export invoices: country of destination; `lut` or `igst_paid`; `{ "arn", "fy" }` of the Letter of Undertaking (the last two only with `fromGstin`) |
 | `tds`, `tdsSection` | Not printed. Receipts: rupees the client deducted as TDS; the client's TDS rule id from `rules/tds-sections.json` (checked). Read by [receivables](../receivables/) |
 | `upiQr`, `upiId`, `upiName` | `true` plus a UPI ID adds a pay-by-UPI QR on invoices, proformas and debit notes. `upiName` defaults to `fromName` |
 
@@ -95,7 +99,7 @@ not shown. `place` defaults to "Outside India".
 | `receipt` | PAYMENT RECEIPT; total reads "Amount Received" | invoice reference, payment mode and UTR | due date, bank, UPI QR |
 | `credit_note` | CREDIT NOTE; total reads "Total Credit" | invoice reference | due date, bank, UPI QR |
 | `debit_note` | DEBIT NOTE | invoice reference, due date, bank, UPI QR | |
-| `export_invoice` | TAX INVOICE, "Export of services" | Rule 46 endorsement, country, LUT, rupee equivalent, due date, bank | UPI QR |
+| `export_invoice` | TAX INVOICE (INVOICE without `fromGstin`), "Export of services" | country, rupee equivalent, due date, bank; with `fromGstin` also the Rule 46 endorsement, LUT, IGST | UPI QR |
 
 Number each type in its own series (e.g. `INV/2627/01`, `QT/2627/01`, `RC/2627/01`). `--next` gives the next number in a series.
 
@@ -107,4 +111,5 @@ UPI payment at ₹1 lakh, so above that the QR leaves the amount out (the payer 
 personal UPI ID. Scan a new QR with your own phone once before sending it to a client.
 
 See `examples/`: `profile.json` (unregistered seller) with `invoice.json` or `receipt.json`; add `registered.json`
-(seller GSTIN) for `gst-auto.json` or `export-invoice.json`. All names, GSTINs and numbers there are made up.
+(seller GSTIN) for `gst-auto.json` or `export-invoice.json`. For an unregistered export invoice, use
+`profile.json` with `export-invoice.json` and drop `exportMode` and `lut`. All names, GSTINs and numbers there are made up.

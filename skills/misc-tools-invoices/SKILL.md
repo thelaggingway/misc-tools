@@ -32,8 +32,16 @@ Work in the business workspace (the folder with `misc-tools.json`). The tool liv
 
 ## Export invoice (services to a client outside India)
 Use `docType: "export_invoice"` and put in the client file `buyerCountry`, `currency` and `place: "Outside India"`;
-in the document, item rates in that currency, plus `exchangeRate` (rupees per unit), `exchangeRateSource`,
-`exchangeRateDate` and `exportMode`:
+in the document, item rates in that currency, plus `exchangeRate` (rupees per unit), `exchangeRateSource` and
+`exchangeRateDate` (always required: the rupee value matters for FEMA and income tax even without GST).
+
+**Owner not GST-registered** (no `fromGstin` in the profile): leave out `exportMode` and `lut`; the tool prints a
+plain INVOICE without the Rule 46 endorsement, LUT or IGST, and rejects those fields. Small service exporters can
+usually bill clients abroad without GST registration, so do not push the owner to register. If their turnover
+is near the GST registration limit, suggest they confirm with their chartered accountant whether they need to
+register. Do not quote a limit from memory.
+
+**Owner GST-registered** (`fromGstin` set): also set `exportMode`:
 - `"lut"` when the owner has filed a Letter of Undertaking for this financial year: add `lut: { "arn", "fy" }`
   (keep it in `profiles/me.json`). Ask the owner for the ARN or have them find it on the GST portal
   (https://www.gst.gov.in, Services > User Services > View My Submitted LUTs). Never invent one. An LUT covers
